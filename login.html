@@ -501,15 +501,13 @@
   <script src="firebase-config.js"></script>
 
   <script>
-    /* ── Session helpers (localStorage = session only, no password stored) ── */
+    // Session management
     function getSession()  { return JSON.parse(localStorage.getItem('apollo_session') || 'null'); }
     function setSession(u, role) { localStorage.setItem('apollo_session', JSON.stringify({ username: u, role, loginTime: Date.now() })); }
     function clearSession() { localStorage.removeItem('apollo_session'); }
 
-    /* ── Firebase reference ── */
     const authDB = window.apolloDB;
 
-    /* ── Seed default admin into Firebase on first visit ── */
     async function ensureAdmin() {
       try {
         const snap = await authDB.ref('apollo_users/admin').once('value');
@@ -519,10 +517,10 @@
             role: 'admin', created: Date.now(), lastLogin: null
           });
         }
-      } catch(e) { /* DB not configured yet */ }
+      } catch(e) { }
     }
 
-    /* ── Tab switching ── */
+    // Interface management
     function switchTab(tab) {
       document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
       document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
@@ -541,7 +539,7 @@
       el.textContent = text; el.className = `msg ${type}`;
     }
 
-    /* ── Login ── */
+    // Login logic
     async function doLogin() {
       const username = document.getElementById('loginUser').value.trim();
       const password = document.getElementById('loginPass').value;
@@ -561,7 +559,7 @@
       }
     }
 
-    /* ── Register ── */
+    // Registration logic
     async function doRegister() {
       const username = document.getElementById('regUser').value.trim();
       const password = document.getElementById('regPass').value;
@@ -588,7 +586,7 @@
       }
     }
 
-    /* ── Logout ── */
+    // Logout logic
     function logout() {
       clearSession();
       document.getElementById('loggedInView').style.display = 'none';
@@ -596,7 +594,7 @@
       switchTab('login');
     }
 
-    /* ── Show logged-in UI ── */
+    // UI updates
     function showLoggedIn(username, role) {
       document.getElementById('authView').style.display = 'none';
       const view = document.getElementById('loggedInView');
@@ -614,14 +612,13 @@
       }
     }
 
-    /* ── Check existing session on load ── */
     window.addEventListener('DOMContentLoaded', () => {
       ensureAdmin();
       const session = getSession();
       if (session) showLoggedIn(session.username, session.role);
     });
 
-    /* ── Enter key support ── */
+    // Keyboard support
     document.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       if (document.getElementById('panelLogin').classList.contains('active')) doLogin();
@@ -630,7 +627,7 @@
   </script>
 
   <script>
-    /* ── Particle background ── */
+    // Background effects
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
     let particlesArray = [];
@@ -667,15 +664,14 @@
     }
     initParticles(); animate();
 
-    /* ── Apply saved theme ── */
-    (function applyTheme() {
-      const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
-      const r = document.documentElement.style;
-      if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
-      if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
-      if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
-      if (t.bg) r.setProperty('--bg', t.bg);
-      if (t.text) r.setProperty('--text', t.text);
+    (function initUI() {
+      const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
+      const btn = document.getElementById('loginNavBtn');
+      const adminBtn = document.getElementById('adminNavBtn');
+      if (session && btn) {
+        btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
+        if (session.role === 'admin' && adminBtn) adminBtn.style.display = 'inline-block';
+      }
     })();
   </script>
 </body>

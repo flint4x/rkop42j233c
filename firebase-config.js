@@ -1,10 +1,3 @@
-// ============================================================
-//  APOLLO — Firebase Config
-//  Paste YOUR firebaseConfig object below (from Firebase Console
-//  → Project Settings → Your Apps → Web App → Config)
-//  Then save this file. All pages share this single config.
-// ============================================================
-
 const firebaseConfig = {
   apiKey: "AIzaSyDf69bfFI-_H2lAgTmGGlKwwZy8Z-Ygebc",
   authDomain: "apollo-site1.firebaseapp.com",
@@ -16,19 +9,19 @@ const firebaseConfig = {
   measurementId: "G-1BFWMYVXKH"
 };
 
-// ── Init (guard against double-load) ──────────────────────────
+// Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// ── Shared DB reference used by all pages ─────────────────────
+// Global database reference
 window.apolloDB = firebase.database();
 
-// ── Real-time online counter (Domain-Specific) ────────────────
+// Real-time online counter
 (function trackPresence() {
   const db = window.apolloDB;
   const con = db.ref('.info/connected');
-  
+
   // Sanitize hostname to use as a database key (replace '.' with '_')
   const domainKey = window.location.hostname.replace(/\./g, '_');
   const connectionsRef = db.ref(`connections/${domainKey}`);

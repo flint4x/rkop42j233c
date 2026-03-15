@@ -11,7 +11,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
-      crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -49,7 +49,6 @@
       pointer-events: none;
     }
 
-    /* Content above particles */
     header,
     .section,
     .iframe-overlay {
@@ -307,8 +306,10 @@
         <a href="index.html"><button><i class="fa-solid fa-house" style="margin-right:5px;"></i>Home</button></a>
         <a href="play.html"><button><i class="fa-solid fa-gamepad" style="margin-right:5px;"></i>Games</button></a>
         <a href="apps.html"><button><i class="fa-solid fa-rocket" style="margin-right:5px;"></i>Apps</button></a>
-        <a href="unblocker.html"><button><i class="fa-solid fa-unlock" style="margin-right:5px;"></i>Unblocker</button></a>
-        <a href="admin.html" id="adminNavBtn" style="display:none;"><button><i class="fa-solid fa-shield-halved" style="margin-right:5px;"></i>Admin</button></a>
+        <a href="unblocker.html"><button><i class="fa-solid fa-unlock"
+              style="margin-right:5px;"></i>Unblocker</button></a>
+        <a href="admin.html" id="adminNavBtn" style="display:none;"><button><i class="fa-solid fa-shield-halved"
+              style="margin-right:5px;"></i>Admin</button></a>
         <a href="settings.html"><button><i class="fa-solid fa-gear" style="margin-right:5px;"></i>Settings</button></a>
         <a href="login.html"><button id="loginNavBtn"><i class="fa-solid fa-user"
               style="margin-right:5px;"></i>Login</button></a>
@@ -575,30 +576,15 @@
 </html>
 
 <script>
-  // Apply saved theme + update login nav
-  (function applyTheme() {
-    const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
-    const r = document.documentElement.style;
-    if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
-    if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
-    if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
-    if (t.bg) r.setProperty('--bg', t.bg);
-    if (t.text) r.setProperty('--text', t.text);
-    
+  (function initUI() {
     const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
     const btn = document.getElementById('loginNavBtn');
     const adminBtn = document.getElementById('adminNavBtn');
-    
-    if (session) {
-      if (btn) btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
-      
-      // Robustness: Fix stale admin sessions missing the role property
-      if (session.username.toLowerCase() === 'admin' && session.role !== 'admin') {
-        session.role = 'admin';
-        localStorage.setItem('apollo_session', JSON.stringify(session));
-      }
 
-      if (adminBtn && session.role === 'admin') {
+    if (session && btn) {
+      btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
+
+      if (session.role === 'admin' && adminBtn) {
         adminBtn.style.display = 'inline-block';
       }
     }

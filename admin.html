@@ -271,30 +271,32 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 const db = window.apolloDB;
 let allUsers = [];
 
-/* ── Auth gate ── */
-function getSession() { return JSON.parse(localStorage.getItem('apollo_session') || 'null'); }
-
 window.addEventListener('DOMContentLoaded', () => {
   applyTheme();
-  let session = getSession();
-  
-  // Robustness Fix: If username is 'admin' but role is missing, repair it
-  if (session && session.username.toLowerCase() === 'admin' && session.role !== 'admin') {
-    session.role = 'admin';
-    localStorage.setItem('apollo_session', JSON.stringify(session));
-  }
+  const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
 
-  if (!session || session.role !== 'admin') {
+  if (!session) {
     document.getElementById('deniedPage').style.display = 'block';
     return;
   }
-  
-  document.getElementById('mainPage').style.display = 'block';
-  loadUsers();
-  trackOnline();
+
+  // Verify admin role via database for security
+  db.ref('apollo_users/' + session.username.toLowerCase()).once('value').then(snap => {
+    const userData = snap.val();
+    if (!userData || userData.role !== 'admin') {
+      document.getElementById('deniedPage').style.display = 'block';
+      return;
+    }
+    
+    document.getElementById('mainPage').style.display = 'block';
+    loadUsers();
+    trackOnline();
+  }).catch(() => {
+    document.getElementById('deniedPage').style.display = 'block';
+  });
 });
 
-/* ── Load all users from Firebase ── */
+// Load users from Firebase
 function loadUsers() {
   db.ref('apollo_users').on('value', snap => {
     allUsers = [];
@@ -308,7 +310,7 @@ function loadUsers() {
   });
 }
 
-/* ── Stats ── */
+// Update statistics display
 function updateStats() {
   const admins = allUsers.filter(u => u.role === 'admin').length;
   document.getElementById('statTotal').textContent  = allUsers.length;
@@ -316,14 +318,14 @@ function updateStats() {
   document.getElementById('statUsers').textContent  = allUsers.length - admins;
 }
 
-/* ── Online counter ── */
+// Track online connections
 function trackOnline() {
   db.ref('connections').on('value', snap => {
     document.getElementById('statOnline').textContent = snap.numChildren();
   });
 }
 
-/* ── Render table ── */
+// Render user table
 function renderTable(users) {
   const tbody = document.getElementById('userTableBody');
   const empty = document.getElementById('emptyState');
@@ -371,7 +373,7 @@ function renderTable(users) {
   });
 }
 
-/* ── Search / filter ── */
+// Search and filter
 function filterTable() {
   const q    = document.getElementById('searchInput').value.toLowerCase();
   const role = document.getElementById('roleFilter').value;
@@ -383,19 +385,20 @@ function filterTable() {
   renderTable(filtered);
 }
 
-/* ── Actions ── */
+// Table actions
 async function setRole(key, role) {
   await db.ref('apollo_users/' + key).update({ role });
   toast(`Role updated to ${role}.`);
 }
 
+// Delete a user
 async function deleteUser(key) {
   if (!confirm(`Delete user "${key}"? This cannot be undone.`)) return;
   await db.ref('apollo_users/' + key).remove();
   toast('User deleted.');
 }
 
-/* ── Helpers ── */
+// Utility functions
 function timeAgo(ts) {
   const diff = Date.now() - ts;
   const mins = Math.floor(diff / 60000);
@@ -425,7 +428,7 @@ function applyTheme() {
 </script>
 
 <script>
-/* ── Particles ── */
+// Visual effects
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particlesArray = [];
