@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<script src="auth-check.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apollo – Admin Panel</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756" crossorigin="anonymous"></script>
+
+<style>
+:root {
+  --bg: #050505; --panel: #0d0d0d; --apollo-1: #60a5fa;
+  --apollo-2: #a78bfa; --apollo-3: #7c3aed;
+  --text: #f5f5f5; --muted: #9b9b9b;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, sans-serif; }
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 20% -10%, rgba(96,165,250,.14), transparent 60%),
+    radial-gradient(900px 500px at 80% 0%, rgba(167,139,250,.12), transparent 60%),
+    var(--bg);
+  color: var(--text); overflow-x: hidden; position: relative;
+}
+#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+header {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(14px);
+  background: rgba(5,5,5,.7);
+  border-bottom: 1px solid rgba(96,165,250,.16);
+}
+.nav {
+  max-width: 1400px; margin: auto; padding: 18px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logo {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s;
+}
+
+.logo:hover img {
+  transform: scale(1.05);
+}
+.nav a button, .nav button {
+  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+  border: none; padding: 10px 20px; border-radius: 12px;
+  font-weight: 800; cursor: pointer; color: #fff;
+  box-shadow: 0 0 30px rgba(96,165,250,.3);
+  transition: transform .25s, box-shadow .25s; font-size: 0.88rem;
+}
+.nav a button:hover, .nav button:hover { transform: translateY(-2px) scale(1.03); }
+
+/* Page */
+.page { max-width: 1400px; margin: 48px auto 80px; padding: 0 28px; position: relative; z-index: 1; animation: fadeUp 0.45s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+.page-title { font-size: clamp(1.8rem,3.5vw,2.4rem); font-weight: 900; margin-bottom: 6px;
+  background: linear-gradient(120deg,#fff,var(--apollo-1)); background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.page-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
+
+/* Stat cards */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 18px; margin-bottom: 32px; }
+.stat-card {
+  background: linear-gradient(180deg,#0b1220,#09090b);
+  border: 1px solid rgba(96,165,250,.18); border-radius: 18px;
+  padding: 22px 24px; position: relative; overflow: hidden;
+  transition: border-color 0.3s;
+}
+.stat-card:hover { border-color: rgba(96,165,250,.35); }
+.stat-card .sc-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+.stat-card .sc-label i { color: var(--apollo-1); }
+.stat-card .sc-value { font-size: 2rem; font-weight: 900; color: var(--text); }
+.stat-card .sc-value span { font-size: 0.75rem; color: var(--muted); font-weight: 500; display: block; margin-top: 2px; }
+
+/* Controls bar */
+.controls { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+.search-input {
+  flex: 1; min-width: 200px; padding: 11px 16px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(96,165,250,.2); border-radius: 12px; color: var(--text);
+  font-size: 0.9rem; outline: none; transition: border-color 0.2s;
+}
+.search-input::placeholder { color: rgba(155,155,155,.5); }
+.search-input:focus { border-color: var(--apollo-1); }
+.filter-select {
+  padding: 11px 14px; background: rgba(255,255,255,.04);
+  border: 1px solid rgba(96,165,250,.2); border-radius: 12px; color: var(--text);
+  font-size: 0.88rem; outline: none; cursor: pointer;
+}
+.filter-select option { background: #0d0d0d; }
+
+/* Table */
+.table-wrap {
+  background: linear-gradient(180deg,#0b1220,#09090b);
+  border: 1px solid rgba(96,165,250,.18); border-radius: 20px;
+  overflow: hidden; overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 14px 18px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--muted); text-align: left;
+  border-bottom: 1px solid rgba(96,165,250,.1); white-space: nowrap;
+}
+tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: background 0.2s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(96,165,250,.04); }
+tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
+
+/* User cell */
+.user-cell { display: flex; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 0.95rem; box-shadow: 0 0 12px rgba(96,165,250,.25);
+}
+.user-name { font-weight: 700; }
+.user-key { font-size: 0.72rem; color: var(--muted); }
+
+/* Role badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px; font-size: 0.73rem; font-weight: 700;
+}
+.badge-admin { background: rgba(167,139,250,.15); color: var(--apollo-2); border: 1px solid rgba(167,139,250,.25); }
+.badge-user  { background: rgba(96,165,250,.10); color: var(--apollo-1); border: 1px solid rgba(96,165,250,.2); }
+.badge-banned { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+
+/* Date cell */
+.date-cell { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+
+/* Action buttons */
+.action-cell { display: flex; gap: 8px; }
+.btn-act {
+  padding: 6px 12px; border-radius: 9px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+  border: none; transition: transform 0.2s, background 0.2s;
+}
+.btn-act:hover { transform: scale(1.06); }
+.btn-promote { background: rgba(167,139,250,.15); color: var(--apollo-2); border: 1px solid rgba(167,139,250,.25); }
+.btn-demote  { background: rgba(96,165,250,.12); color: var(--apollo-1); border: 1px solid rgba(96,165,250,.2); }
+.btn-delete  { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-state i { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.4; display: block; color: var(--apollo-1); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 28px; right: 28px;
+  background: linear-gradient(135deg,#0b1220,#09090b);
+  border: 1px solid rgba(96,165,250,.3); border-radius: 14px;
+  padding: 13px 20px; color: var(--text); font-weight: 600; font-size: 0.88rem;
+  box-shadow: 0 0 40px rgba(96,165,250,.15), 0 20px 60px rgba(0,0,0,.8);
+  z-index: 9999; display: flex; align-items: center; gap: 10px;
+  transform: translateY(120px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16,1,.3,1), opacity 0.4s;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast i { color: #4ade80; }
+
+/* Loading spinner */
+.spinner { text-align: center; padding: 60px; color: var(--muted); }
+.spinner i { font-size: 2rem; color: var(--apollo-1); animation: spin 1s linear infinite; }
+
+@keyframes shine { to { background-position:200% center; } }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+  <div class="nav">
+    <div class="logo" onclick="window.location.href='index.html'"><img src="images/logo.png" alt="Apollo"></div>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <a href="index.html"><button><i class="fa-solid fa-house" style="margin-right:5px;"></i>Home</button></a>
+      <a href="play.html"><button><i class="fa-solid fa-gamepad" style="margin-right:5px;"></i>Games</button></a>
+      <a href="apps.html"><button><i class="fa-solid fa-rocket" style="margin-right:5px;"></i>Apps</button></a>
+      <a href="unblocker.html"><button><i class="fa-solid fa-unlock" style="margin-right:5px;"></i>Unblocker</button></a>
+      <a href="login.html"><button><i class="fa-solid fa-user" style="margin-right:5px;"></i>Account</button></a>
+      <a href="settings.html"><button><i class="fa-solid fa-gear" style="margin-right:5px;"></i>Settings</button></a>
+    </div>
+  </div>
+</header>
+
+<div class="page" id="mainPage" style="display:none;">
+  <div class="page-title"><i class="fa-solid fa-shield-halved" style="margin-right:12px;opacity:.8;"></i>Admin Panel</div>
+  <p class="page-sub">Manage all Apollo user accounts in real-time.</p>
+
+  <!-- Stat cards -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="sc-label"><i class="fa-solid fa-users"></i>Total Users</div>
+      <div class="sc-value" id="statTotal">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label"><i class="fa-solid fa-shield-halved"></i>Admins</div>
+      <div class="sc-value" id="statAdmins">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label"><i class="fa-solid fa-user"></i>Regular Users</div>
+      <div class="sc-value" id="statUsers">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label"><i class="fa-solid fa-circle" style="color:#4ade80;"></i>Online Now</div>
+      <div class="sc-value" id="statOnline">—</div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="🔍  Search by username…" oninput="filterTable()">
+    <select id="roleFilter" class="filter-select" onchange="filterTable()">
+      <option value="all">All Roles</option>
+      <option value="admin">Admins</option>
+      <option value="user">Users</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <div class="spinner" id="loadingSpinner"><i class="fa-solid fa-circle-notch"></i></div>
+    <table id="userTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Joined</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <i class="fa-solid fa-users-slash"></i>No users match your filter.
+    </div>
+  </div>
+</div>
+
+<!-- Access denied -->
+<div class="page" id="deniedPage" style="display:none;">
+  <div style="text-align:center;padding:80px 20px;">
+    <i class="fa-solid fa-lock" style="font-size:3rem;color:var(--apollo-1);margin-bottom:20px;display:block;"></i>
+    <h2 style="font-size:1.6rem;font-weight:900;margin-bottom:10px;">Admin Access Required</h2>
+    <p style="color:var(--muted);margin-bottom:28px;">You need to be signed in as an administrator to view this page.</p>
+    <a href="login.html"><button style="background:linear-gradient(135deg,var(--apollo-1),var(--apollo-3));border:none;padding:14px 28px;border-radius:14px;font-weight:900;cursor:pointer;color:#fff;">Go to Login</button></a>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg">Done!</span></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+const db = window.apolloDB;
+let allUsers = [];
+
+/* ── Auth gate ── */
+function getSession() { return JSON.parse(localStorage.getItem('apollo_session') || 'null'); }
+
+window.addEventListener('DOMContentLoaded', () => {
+  applyTheme();
+  let session = getSession();
+  
+  // Robustness Fix: If username is 'admin' but role is missing, repair it
+  if (session && session.username.toLowerCase() === 'admin' && session.role !== 'admin') {
+    session.role = 'admin';
+    localStorage.setItem('apollo_session', JSON.stringify(session));
+  }
+
+  if (!session || session.role !== 'admin') {
+    document.getElementById('deniedPage').style.display = 'block';
+    return;
+  }
+  
+  document.getElementById('mainPage').style.display = 'block';
+  loadUsers();
+  trackOnline();
+});
+
+/* ── Load all users from Firebase ── */
+function loadUsers() {
+  db.ref('apollo_users').on('value', snap => {
+    allUsers = [];
+    snap.forEach(child => {
+      allUsers.push({ key: child.key, ...child.val() });
+    });
+    updateStats();
+    renderTable(allUsers);
+    document.getElementById('loadingSpinner').style.display = 'none';
+    document.getElementById('userTable').style.display = 'table';
+  });
+}
+
+/* ── Stats ── */
+function updateStats() {
+  const admins = allUsers.filter(u => u.role === 'admin').length;
+  document.getElementById('statTotal').textContent  = allUsers.length;
+  document.getElementById('statAdmins').textContent = admins;
+  document.getElementById('statUsers').textContent  = allUsers.length - admins;
+}
+
+/* ── Online counter ── */
+function trackOnline() {
+  db.ref('connections').on('value', snap => {
+    document.getElementById('statOnline').textContent = snap.numChildren();
+  });
+}
+
+/* ── Render table ── */
+function renderTable(users) {
+  const tbody = document.getElementById('userTableBody');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('userTable');
+  tbody.innerHTML = '';
+
+  if (users.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  table.style.display = 'table';
+
+  users.forEach(user => {
+    const tr = document.createElement('tr');
+    const joined   = user.created   ? new Date(user.created).toLocaleDateString()   : '—';
+    const lastSeen = user.lastLogin  ? timeAgo(user.lastLogin)                        : 'Never';
+    const badgeClass = user.role === 'admin' ? 'badge-admin' : (user.role === 'banned' ? 'badge-banned' : 'badge-user');
+    const badgeIcon  = user.role === 'admin' ? 'fa-shield-halved' : 'fa-user';
+
+    tr.innerHTML = `
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar">${(user.username || user.key).charAt(0).toUpperCase()}</div>
+          <div>
+            <div class="user-name">${user.username || user.key}</div>
+            <div class="user-key">key: ${user.key}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge ${badgeClass}"><i class="fa-solid ${badgeIcon}"></i>${user.role || 'user'}</span></td>
+      <td class="date-cell">${joined}</td>
+      <td class="date-cell">${lastSeen}</td>
+      <td>
+        <div class="action-cell">
+          ${user.role !== 'admin'
+            ? `<button class="btn-act btn-promote" onclick="setRole('${user.key}','admin')"><i class="fa-solid fa-arrow-up" style="margin-right:4px;"></i>Promote</button>`
+            : `<button class="btn-act btn-demote"  onclick="setRole('${user.key}','user')"><i class="fa-solid fa-arrow-down" style="margin-right:4px;"></i>Demote</button>`}
+          <button class="btn-act btn-delete" onclick="deleteUser('${user.key}')"><i class="fa-solid fa-trash" style="margin-right:4px;"></i>Delete</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+/* ── Search / filter ── */
+function filterTable() {
+  const q    = document.getElementById('searchInput').value.toLowerCase();
+  const role = document.getElementById('roleFilter').value;
+  const filtered = allUsers.filter(u => {
+    const nameMatch = (u.username || u.key).toLowerCase().includes(q);
+    const roleMatch = role === 'all' || u.role === role;
+    return nameMatch && roleMatch;
+  });
+  renderTable(filtered);
+}
+
+/* ── Actions ── */
+async function setRole(key, role) {
+  await db.ref('apollo_users/' + key).update({ role });
+  toast(`Role updated to ${role}.`);
+}
+
+async function deleteUser(key) {
+  if (!confirm(`Delete user "${key}"? This cannot be undone.`)) return;
+  await db.ref('apollo_users/' + key).remove();
+  toast('User deleted.');
+}
+
+/* ── Helpers ── */
+function timeAgo(ts) {
+  const diff = Date.now() - ts;
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)   return 'Just now';
+  if (mins < 60)  return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)   return `${hrs}h ago`;
+  return new Date(ts).toLocaleDateString();
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function applyTheme() {
+  const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
+  const r = document.documentElement.style;
+  if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
+  if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
+  if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
+  if (t.bg)      r.setProperty('--bg', t.bg);
+  if (t.text)    r.setProperty('--text', t.text);
+}
+</script>
+
+<script>
+/* ── Particles ── */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particlesArray = [];
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+class Particle {
+  constructor(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+1;this.speedX=(Math.random()-.5)*.5;this.speedY=(Math.random()-.5)*.5;}
+  update(){this.x+=this.speedX;this.y+=this.speedY;if(this.x<0||this.x>canvas.width)this.speedX*=-1;if(this.y<0||this.y>canvas.height)this.speedY*=-1;}
+  draw(){ctx.fillStyle='rgba(96,165,250,0.18)';ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();}
+}
+function init(){for(let i=0;i<60;i++)particlesArray.push(new Particle());}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particlesArray.forEach(p=>{p.update();p.draw();});
+  for(let a=0;a<particlesArray.length;a++)for(let b=a+1;b<particlesArray.length;b++){
+    const dx=particlesArray[a].x-particlesArray[b].x,dy=particlesArray[a].y-particlesArray[b].y;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<120){ctx.strokeStyle=`rgba(167,139,250,${1-d/120})`;ctx.lineWidth=0.7;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();}
+  }requestAnimationFrame(animate);}
+init();animate();
+</script>
+</body>
+</html>

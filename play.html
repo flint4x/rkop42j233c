@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script src="auth-check.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apollo – Play</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
+      crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg: #050505;
+      --text: #f5f5f5;
+      --apollo-1: #60a5fa; /* blue */
+      --apollo-3: #7c3aed; /* deep purple */
+      --panel: #0d0d0d;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, sans-serif; }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Content above particles */
+    header, .section, .iframe-overlay {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(5,5,5,.7);
+      border-bottom: 1px solid rgba(96,165,250,.16);
+    }
+
+    .nav {
+      max-width: 1300px;
+      margin: auto;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .logo img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      transition: transform 0.2s;
+    }
+
+    .logo:hover img {
+      transform: scale(1.05);
+    }
+
+    .nav a button {
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      border: none;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 0 35px rgba(96,165,250,.35);
+      transition: transform .25s, box-shadow .25s;
+    }
+
+    .nav a button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 65px rgba(167,139,250,.55);
+    }
+
+    .section {
+      max-width: 1300px;
+      margin: auto;
+      padding: 90px 28px 110px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 5vw, 3.6rem);
+      margin-bottom: 36px;
+      font-weight: 900;
+      background: linear-gradient(120deg, #fff, var(--apollo-1));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .search-bar {
+      max-width: 420px;
+      margin: 0 auto 30px;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(96,165,250,.35);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 1.05rem;
+      outline: none;
+    }
+
+    .games {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 26px;
+      padding: 40px 22px;
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    .game {
+      background: linear-gradient(180deg, #0b1220, #0b0b0b);
+      border-radius: 30px;
+      padding: 22px 22px 26px;
+      border: 1px solid rgba(96,165,250,.18);
+      position: relative;
+      overflow: hidden;
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+      display: block;
+    }
+
+    .game::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(167,139,250,0.22), transparent 70%);
+      opacity: 0;
+      transition: opacity .35s ease;
+      pointer-events: none;
+    }
+
+    .game:hover::before { opacity: 1; }
+    .game:hover {
+      transform: translateY(-12px) scale(1.04);
+      box-shadow: 0 30px 70px rgba(0,0,0,.9), 0 0 60px rgba(96,165,250,.25), 0 0 70px rgba(167,139,250,.18);
+    }
+
+    .thumb {
+      width: 100%;
+      height: 170px;
+      border-radius: 22px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 0 30px rgba(96,165,250,.18);
+      position: relative;
+      z-index: 1;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .4s ease;
+    }
+
+    .game:hover .thumb img { transform: scale(1.08); }
+
+    .game h3 {
+      margin-bottom: 16px;
+      color: var(--apollo-1);
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .play {
+      margin-top: auto;
+      width: 100%;
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      border: none;
+      padding: 14px;
+      border-radius: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 0 30px rgba(96,165,250,.25);
+      transition: transform .2s, box-shadow .2s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .play:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 55px rgba(167,139,250,.35);
+    }
+
+    .iframe-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.98);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .iframe-controls {
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      z-index: 1000;
+    }
+
+    .iframe-controls button {
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      border: none;
+      padding: 10px 24px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      color: #000;
+      box-shadow: 0 0 25px rgba(96,165,250,.22);
+      transition: transform 0.2s ease;
+    }
+
+    .iframe-controls button:hover {
+      transform: scale(1.05);
+    }
+
+    #iframeContainer {
+      width: 95vw;
+      height: 90vh;
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #iframeContainer iframe {
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(96,165,250,0.22);
+      border-radius: 18px;
+      background: 	#2F2F2F;
+    }
+
+    @keyframes shine { to { background-position: 200% center; } }
+  </style>
+</head>
+
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+  <div class="nav">
+    <div class="logo" onclick="window.location.href='index.html'"><img src="images/logo.png" alt="Apollo"></div>
+    <div style="display:flex; gap:14px;">
+      <a href="index.html"><button><i class="fa-solid fa-house" style="margin-right:5px;"></i>Home</button></a>
+      <a href="play.html"><button><i class="fa-solid fa-gamepad" style="margin-right:5px;"></i>Games</button></a>
+      <a href="apps.html"><button><i class="fa-solid fa-rocket" style="margin-right:5px;"></i>Apps</button></a>
+      <a href="unblocker.html"><button><i class="fa-solid fa-unlock" style="margin-right:5px;"></i>Unblocker</button></a>
+      <a href="admin.html" id="adminNavBtn" style="display:none;"><button><i class="fa-solid fa-shield-halved" style="margin-right:5px;"></i>Admin</button></a>
+      <a href="settings.html"><button><i class="fa-solid fa-gear" style="margin-right:5px;"></i>Settings</button></a>
+      <a href="login.html"><button id="loginNavBtn"><i class="fa-solid fa-user" style="margin-right:5px;"></i>Login</button></a>
+    </div>
+  </div>
+</header>
+
+<section class="section">
+  <h1>Select a Game</h1>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search games...">
+  </div>
+  <div class="games" id="gameList"></div>
+</section>
+
+<div class="iframe-overlay" id="iframeOverlay">
+  <div class="iframe-controls">
+    <button id="closeBtn">Close ✕</button>
+    <button id="fullscreenBtn">Fullscreen ⛶</button>
+  </div>
+  <div id="iframeContainer"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyCAMwP6d2aZ7y1XK0YUujKmDg-50Tm_xQw",
+  authDomain: "goldhub-c1a71.firebaseapp.com",
+    databaseURL: "https://goldhub-c1a71-default-rtdb.firebaseio.com/",
+  projectId: "goldhub-c1a71",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const connectionsRef = db.ref("connections");
+  const connectedRef = db.ref(".info/connected");
+
+  connectedRef.on("value", snap => {
+    if (snap.val() === true) {
+      const con = connectionsRef.push(true);
+      con.onDisconnect().remove();
+    }
+  });
+</script>
+
+<script>
+const searchInput = document.getElementById('search');
+const gameList = document.getElementById('gameList');
+const overlay = document.getElementById('iframeOverlay');
+const closeBtn = document.getElementById('closeBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const iframeContainer = document.getElementById('iframeContainer');
+
+let currentIframe = null;
+
+function createFreshIframe() {
+  iframeContainer.innerHTML = '';
+  const iframe = document.createElement('iframe');
+  // Permissions for modern games
+  iframe.allow = 'autoplay; fullscreen; gamepad; accelerometer; gyroscope; pointer-lock; microphone';
+  iframeContainer.appendChild(iframe);
+  currentIframe = iframe;
+  return iframe;
+}
+
+const priorityGames = [
+  "[!] REQUEST GAME",
+  "R0blox",
+  "F0rtnite"
+];
+
+const gamesUrls = [
+  'data/games.json',
+  'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/games.json',
+];
+
+async function fetchFirstJson(urls) {
+  let lastErr = null;
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+      return await res.json();
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr ?? new Error('Failed to load JSON');
+}
+
+fetchFirstJson(gamesUrls)
+  .then(data => {
+    gameList.innerHTML = '';
+
+    data.sort((a, b) => {
+      const ai = priorityGames.indexOf(a.name);
+      const bi = priorityGames.indexOf(b.name);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    data.forEach(game => {
+      const card = document.createElement('div');
+      card.className = 'game';
+      card.dataset.name = game.name;
+
+      card.innerHTML = `
+        <div class="thumb"><img src="${game.image}" alt="${game.name}"></div>
+        <h3>${game.name}</h3>
+        <button class="play">Play</button>
+      `;
+
+      card.querySelector('.play').addEventListener('click', () => {
+        overlay.style.display = 'flex'; // Uses flex to center content
+        const iframe = createFreshIframe();
+
+fetch(game.src)
+  .then(r => r.text())
+  .then(html => {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(html);
+    doc.close();
+  })
+          .catch(() => {
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(`<h2 style="color:white;padding:20px;">Failed to load game</h2>`);
+            doc.close();
+            iframe.onload = () => {
+
+  const removeAds = () => {
+    const ads =
+      iframe.contentDocument?.querySelectorAll(
+        '#sidebarad1, #sidebarad2'
+      );
+
+    ads?.forEach(ad => ad.remove());
+  };
+
+  // remove immediately
+  removeAds();
+
+  // keep removing if game recreates ads
+  const observer = new MutationObserver(removeAds);
+
+  observer.observe(
+    iframe.contentDocument,
+    { childList: true, subtree: true }
+  );
+};
+          });
+      });
+
+      gameList.appendChild(card);
+    });
+  });
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase();
+  document.querySelectorAll('.game').forEach(g => {
+    g.style.display = g.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
+  });
+});
+
+closeBtn.onclick = () => {
+  overlay.style.display = 'none';
+  if (currentIframe) {
+    currentIframe.src = 'about:blank';
+  }
+  iframeContainer.innerHTML = '';
+  currentIframe = null;
+};
+
+fullscreenBtn.onclick = () => {
+  if (currentIframe) {
+    if (currentIframe.requestFullscreen) {
+      currentIframe.requestFullscreen();
+    } else if (currentIframe.webkitRequestFullscreen) {
+      currentIframe.webkitRequestFullscreen();
+    } else if (iframeContainer.requestFullscreen) {
+      iframeContainer.requestFullscreen();
+    }
+  }
+};
+
+overlay.addEventListener('click', e => {
+  if (e.target === overlay) closeBtn.onclick();
+});
+</script>
+
+<script>
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let particlesArray = [];
+const particleCount = 80;
+const lineDistance = 120;
+let mouse = { x: null, y: null };
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+canvas.addEventListener('mousemove', e => {
+  mouse.x = e.x;
+  mouse.y = e.y;
+});
+
+canvas.addEventListener('mouseleave', () => {
+  mouse.x = null;
+  mouse.y = null;
+});
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 1;
+    this.speedX = (Math.random() - 0.5) * 0.5;
+    this.speedY = (Math.random() - 0.5) * 0.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+  draw() {
+    ctx.fillStyle = 'rgba(96,165,250,0.22)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function connectParticles() {
+  for (let a = 0; a < particlesArray.length; a++) {
+    for (let b = a + 1; b < particlesArray.length; b++) {
+      const dx = particlesArray[a].x - particlesArray[b].x;
+      const dy = particlesArray[a].y - particlesArray[b].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < lineDistance) {
+        ctx.strokeStyle = `rgba(167,139,250,${1 - dist / lineDistance})`;
+        ctx.lineWidth = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+function initParticles() {
+  particlesArray = [];
+  for (let i = 0; i < particleCount; i++) {
+    particlesArray.push(new Particle());
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particlesArray.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  connectParticles();
+  requestAnimationFrame(animate);
+}
+
+initParticles();
+animate();
+</script>
+
+</body>
+</html>
+
+<script>
+// Apply saved theme + update login nav
+(function applyTheme() {
+  const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
+  const r = document.documentElement.style;
+  if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
+  if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
+  if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
+  if (t.bg) r.setProperty('--bg', t.bg);
+  if (t.text) r.setProperty('--text', t.text);
+  
+  const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
+  const btn = document.getElementById('loginNavBtn');
+  const adminBtn = document.getElementById('adminNavBtn');
+  
+  if (session) {
+    if (btn) btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
+    
+    // Robustness: Fix stale admin sessions missing the role property
+    if (session.username.toLowerCase() === 'admin' && session.role !== 'admin') {
+      session.role = 'admin';
+      localStorage.setItem('apollo_session', JSON.stringify(session));
+    }
+
+    if (adminBtn && session.role === 'admin') {
+      adminBtn.style.display = 'inline-block';
+    }
+  }
+})();
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>

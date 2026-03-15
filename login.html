@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <script src="auth-check.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apollo – Login</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
+      crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0d0d0d;
+      --panel-soft: #131313;
+      --apollo-1: #60a5fa;
+      --apollo-2: #a78bfa;
+      --apollo-3: #7c3aed;
+      --text: #f5f5f5;
+      --muted: #9b9b9b;
+      --error: #f87171;
+      --success: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(900px 500px at 20% -10%, rgba(96, 165, 250, .16), transparent 60%),
+        radial-gradient(900px 500px at 80% 0%, rgba(167, 139, 250, .14), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .login-wrapper {
+      position: relative;
+      z-index: 1;
+      width: min(440px, 92vw);
+      animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo-top {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo-top a {
+      display: inline-block;
+      height: 50px;
+      transition: transform 0.2s;
+    }
+
+    .logo-top a img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .logo-top a:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-top p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #0b1220, #09090b);
+      border: 1px solid rgba(96, 165, 250, .2);
+      border-radius: 24px;
+      padding: 36px 38px;
+      box-shadow: 0 0 60px rgba(96, 165, 250, .12), 0 30px 90px rgba(0, 0, 0, .9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background: conic-gradient(from 0deg, transparent, rgba(167, 139, 250, .06), transparent);
+      animation: spin 22s linear infinite;
+      pointer-events: none;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(255, 255, 255, .04);
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      color: #fff;
+      box-shadow: 0 0 20px rgba(96, 165, 250, .3);
+    }
+
+    /* Form */
+    .form-panel {
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-panel.active {
+      display: block;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--apollo-1);
+      opacity: 0.6;
+      font-size: 0.85rem;
+    }
+
+    .field input {
+      width: 100%;
+      padding: 13px 16px 13px 42px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(96, 165, 250, .2);
+      border-radius: 14px;
+      color: var(--text);
+      font-size: 0.97rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--apollo-1);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, .12);
+    }
+
+    .field input::placeholder {
+      color: rgba(155, 155, 155, 0.5);
+    }
+
+    .msg {
+      font-size: 0.83rem;
+      font-weight: 600;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      display: none;
+    }
+
+    .msg.error {
+      background: rgba(248, 113, 113, .12);
+      color: var(--error);
+      border: 1px solid rgba(248, 113, 113, .25);
+      display: block;
+    }
+
+    .msg.success {
+      background: rgba(74, 222, 128, .12);
+      color: var(--success);
+      border: 1px solid rgba(74, 222, 128, .25);
+      display: block;
+    }
+
+    .msg.info {
+      background: rgba(96, 165, 250, .10);
+      color: var(--apollo-1);
+      border: 1px solid rgba(96, 165, 250, .22);
+      display: block;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      border: none;
+      border-radius: 16px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(96, 165, 250, .3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 65px rgba(167, 139, 250, .45);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.98);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(96, 165, 250, .15);
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-note a {
+      color: var(--apollo-1);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Logged in state */
+    .logged-in-view {
+      display: none;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatar-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin: 0 auto 16px;
+      box-shadow: 0 0 40px rgba(96, 165, 250, .35);
+    }
+
+    .logged-in-view h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .logged-in-view p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 26px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-direction: column;
+    }
+
+    .btn-ghost {
+      width: 100%;
+      padding: 13px;
+      background: rgba(96, 165, 250, .08);
+      border: 1px solid rgba(96, 165, 250, .2);
+      border-radius: 14px;
+      color: var(--apollo-1);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(96, 165, 250, .15);
+      transform: translateY(-1px);
+    }
+
+    .btn-danger {
+      width: 100%;
+      padding: 13px;
+      background: rgba(248, 113, 113, .08);
+      border: 1px solid rgba(248, 113, 113, .2);
+      border-radius: 14px;
+      color: var(--error);
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn-danger:hover {
+      background: rgba(248, 113, 113, .15);
+      transform: translateY(-1px);
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <div class="login-wrapper">
+    <div class="logo-top">
+      <a href="index.html"><img src="images/logo.png" alt="Apollo"></a>
+      <p>Sign in to access your account</p>
+    </div>
+
+    <div class="card">
+      <!-- Logged-in State -->
+      <div class="logged-in-view" id="loggedInView">
+        <div class="avatar-circle" id="avatarCircle">?</div>
+        <h2 id="welcomeName">Welcome back!</h2>
+        <p id="welcomeSub">You're signed in to Apollo.</p>
+        <div class="btn-group">
+          <button class="btn-ghost" onclick="window.location.href='index.html'"><i class="fa-solid fa-house"
+              style="margin-right:8px;"></i>Go to Home</button>
+          <button class="btn-ghost" id="adminPanelBtn" onclick="window.location.href='admin.html'" style="display:none;"><i class="fa-solid fa-shield-halved"
+              style="margin-right:8px;"></i>Admin Panel</button>
+          <button class="btn-ghost" onclick="window.location.href='unblocker.html'"><i class="fa-solid fa-unlock"
+              style="margin-right:8px;"></i>Unblocker</button>
+          <button class="btn-ghost" onclick="window.location.href='settings.html'"><i class="fa-solid fa-gear"
+              style="margin-right:8px;"></i>Settings</button>
+          <button class="btn-danger" onclick="logout()"><i class="fa-solid fa-right-from-bracket"
+              style="margin-right:8px;"></i>Sign Out</button>
+        </div>
+      </div>
+
+      <!-- Auth Forms -->
+      <div id="authView">
+        <div class="tabs">
+          <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+          <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Login -->
+        <div class="form-panel active" id="panelLogin">
+          <div id="loginMsg" class="msg"></div>
+          <div class="field">
+            <label>Username</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username">
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password">
+            </div>
+          </div>
+          <button class="btn-submit" onclick="doLogin()">
+            <i class="fa-solid fa-right-to-bracket" style="margin-right:8px;"></i>Sign In
+          </button>
+          <div class="divider">or</div>
+          <p style="text-align:center; color:var(--muted); font-size:0.85rem;">Don't have an account? <a href="#"
+              onclick="switchTab('register'); return false;" style="color:var(--apollo-1);font-weight:700;">Register
+              here</a></p>
+        </div>
+
+        <!-- Register -->
+        <div class="form-panel" id="panelRegister">
+          <div id="registerMsg" class="msg"></div>
+          <div class="field">
+            <label>Username</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="regUser" placeholder="Choose a username" autocomplete="username">
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" id="regPass" placeholder="Create a password" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="field">
+            <label>Confirm Password</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock-open"></i>
+              <input type="password" id="regPassConfirm" placeholder="Repeat password" autocomplete="new-password">
+            </div>
+          </div>
+          <button class="btn-submit" onclick="doRegister()">
+            <i class="fa-solid fa-user-plus" style="margin-right:8px;"></i>Create Account
+          </button>
+          <div class="divider">or</div>
+          <p style="text-align:center; color:var(--muted); font-size:0.85rem;">Have an account? <a href="#"
+              onclick="switchTab('login'); return false;" style="color:var(--apollo-1);font-weight:700;">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <a href="index.html"><i class="fa-solid fa-arrow-left" style="margin-right:6px;"></i>Back to Hub</a>
+      &nbsp;·&nbsp;
+      <a href="settings.html"><i class="fa-solid fa-gear" style="margin-right:6px;"></i>Settings</a>
+      &nbsp;·&nbsp;
+      <a href="admin.html" id="footerAdminLink" style="display:none;"><i class="fa-solid fa-shield-halved" style="margin-right:6px;"></i>Admin</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    /* ── Session helpers (localStorage = session only, no password stored) ── */
+    function getSession()  { return JSON.parse(localStorage.getItem('apollo_session') || 'null'); }
+    function setSession(u, role) { localStorage.setItem('apollo_session', JSON.stringify({ username: u, role, loginTime: Date.now() })); }
+    function clearSession() { localStorage.removeItem('apollo_session'); }
+
+    /* ── Firebase reference ── */
+    const authDB = window.apolloDB;
+
+    /* ── Seed default admin into Firebase on first visit ── */
+    async function ensureAdmin() {
+      try {
+        const snap = await authDB.ref('apollo_users/admin').once('value');
+        if (!snap.exists()) {
+          await authDB.ref('apollo_users/admin').set({
+            username: 'admin', password: 'apollo123',
+            role: 'admin', created: Date.now(), lastLogin: null
+          });
+        }
+      } catch(e) { /* DB not configured yet */ }
+    }
+
+    /* ── Tab switching ── */
+    function switchTab(tab) {
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+      document.getElementById('panelLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('panelRegister').classList.toggle('active', tab === 'register');
+      clearMessages();
+    }
+    function clearMessages() {
+      ['loginMsg', 'registerMsg'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'msg'; el.textContent = '';
+      });
+    }
+    function showMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text; el.className = `msg ${type}`;
+    }
+
+    /* ── Login ── */
+    async function doLogin() {
+      const username = document.getElementById('loginUser').value.trim();
+      const password = document.getElementById('loginPass').value;
+      if (!username || !password) return showMsg('loginMsg', 'Please fill in all fields.', 'error');
+      showMsg('loginMsg', 'Signing in…', 'info');
+      try {
+        const snap = await authDB.ref('apollo_users/' + username.toLowerCase()).once('value');
+        if (!snap.exists()) return showMsg('loginMsg', 'Invalid username or password.', 'error');
+        const user = snap.val();
+        if (user.password !== password) return showMsg('loginMsg', 'Invalid username or password.', 'error');
+        await authDB.ref('apollo_users/' + username.toLowerCase()).update({ lastLogin: Date.now() });
+        setSession(user.username, user.role || 'user');
+        showLoggedIn(user.username, user.role || 'user');
+      } catch(e) {
+        showMsg('loginMsg', 'Connection error — check your Firebase config.', 'error');
+        console.error(e);
+      }
+    }
+
+    /* ── Register ── */
+    async function doRegister() {
+      const username = document.getElementById('regUser').value.trim();
+      const password = document.getElementById('regPass').value;
+      const confirm  = document.getElementById('regPassConfirm').value;
+      if (!username || !password || !confirm) return showMsg('registerMsg', 'Please fill in all fields.', 'error');
+      if (username.length < 3)  return showMsg('registerMsg', 'Username must be at least 3 characters.', 'error');
+      if (!/^[a-zA-Z0-9_]+$/.test(username)) return showMsg('registerMsg', 'Use only letters, numbers, underscores.', 'error');
+      if (password.length < 6)  return showMsg('registerMsg', 'Password must be at least 6 characters.', 'error');
+      if (password !== confirm)  return showMsg('registerMsg', 'Passwords do not match.', 'error');
+      showMsg('registerMsg', 'Creating account…', 'info');
+      try {
+        const snap = await authDB.ref('apollo_users/' + username.toLowerCase()).once('value');
+        if (snap.exists()) return showMsg('registerMsg', 'Username already taken.', 'error');
+        await authDB.ref('apollo_users/' + username.toLowerCase()).set({
+          username, password, role: 'user',
+          created: Date.now(), lastLogin: Date.now()
+        });
+        setSession(username, 'user');
+        showMsg('registerMsg', 'Account created! Signing you in…', 'success');
+        setTimeout(() => showLoggedIn(username, 'user'), 700);
+      } catch(e) {
+        showMsg('registerMsg', 'Connection error — check your Firebase config.', 'error');
+        console.error(e);
+      }
+    }
+
+    /* ── Logout ── */
+    function logout() {
+      clearSession();
+      document.getElementById('loggedInView').style.display = 'none';
+      document.getElementById('authView').style.display = 'block';
+      switchTab('login');
+    }
+
+    /* ── Show logged-in UI ── */
+    function showLoggedIn(username, role) {
+      document.getElementById('authView').style.display = 'none';
+      const view = document.getElementById('loggedInView');
+      view.style.display = 'block';
+      document.getElementById('avatarCircle').textContent = username.charAt(0).toUpperCase();
+      document.getElementById('welcomeName').textContent = `Welcome, ${username}!`;
+      document.getElementById('welcomeSub').textContent =
+        role === 'admin' ? `Signed in as Administrator.` : `You're signed in to Apollo.`;
+      // Show admin panel link if admin
+      if (role === 'admin') {
+        const btn = document.getElementById('adminPanelBtn');
+        const lnk = document.getElementById('footerAdminLink');
+        if (btn) btn.style.display = 'block';
+        if (lnk) lnk.style.display = 'inline';
+      }
+    }
+
+    /* ── Check existing session on load ── */
+    window.addEventListener('DOMContentLoaded', () => {
+      ensureAdmin();
+      const session = getSession();
+      if (session) showLoggedIn(session.username, session.role);
+    });
+
+    /* ── Enter key support ── */
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      if (document.getElementById('panelLogin').classList.contains('active')) doLogin();
+      else doRegister();
+    });
+  </script>
+
+  <script>
+    /* ── Particle background ── */
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particlesArray = [];
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+      }
+      update() {
+        this.x += this.speedX; this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(96,165,250,0.22)';
+        ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    function initParticles() { for (let i = 0; i < 70; i++) particlesArray.push(new Particle()); }
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(p => { p.update(); p.draw(); });
+      for (let a = 0; a < particlesArray.length; a++) for (let b = a + 1; b < particlesArray.length; b++) {
+        const dx = particlesArray[a].x - particlesArray[b].x, dy = particlesArray[a].y - particlesArray[b].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 120) { ctx.strokeStyle = `rgba(167,139,250,${1 - d / 120})`; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke(); }
+      }
+      requestAnimationFrame(animate);
+    }
+    initParticles(); animate();
+
+    /* ── Apply saved theme ── */
+    (function applyTheme() {
+      const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
+      const r = document.documentElement.style;
+      if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
+      if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
+      if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
+      if (t.bg) r.setProperty('--bg', t.bg);
+      if (t.text) r.setProperty('--text', t.text);
+    })();
+  </script>
+</body>
+
+</html>

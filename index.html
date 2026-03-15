@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <script src="auth-check.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apollo</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
+        crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0d0d0d;
+            --panel-soft: #131313;
+            --apollo-1: #60a5fa;
+            /* blue */
+            --apollo-2: #a78bfa;
+            /* purple */
+            --apollo-3: #7c3aed;
+            /* deep purple */
+            --text: #f5f5f5;
+            --muted: #9b9b9b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Inter, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(900px 500px at 20% -10%, rgba(96, 165, 250, .16), transparent 60%),
+                radial-gradient(900px 500px at 80% 0%, rgba(167, 139, 250, .14), transparent 60%),
+                var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(14px);
+            background: rgba(5, 5, 5, .7);
+            border-bottom: 1px solid rgba(96, 165, 250, .16);
+        }
+
+        .nav {
+            max-width: 1300px;
+            margin: auto;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            height: 40px;
+            /* Adjust height as needed */
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .nav a button {
+            background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+            border: none;
+            padding: 12px 22px;
+            border-radius: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            color: #fff;
+            box-shadow: 0 0 35px rgba(96, 165, 250, .35);
+            transition: transform .25s, box-shadow .25s;
+        }
+
+        .nav a button:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 0 65px rgba(167, 139, 250, .55);
+        }
+
+        .hero {
+            max-width: 1300px;
+            margin: auto;
+            padding: 90px 28px 80px;
+            /* Reduced top padding from 110px */
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 40px;
+            /* Reduced from 70px */
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero .hero-logo {
+            height: 150px;
+            /* Increased from 100px */
+            margin-bottom: 12px;
+            /* Reduced from 22px */
+            display: flex;
+            align-items: center;
+        }
+
+        .hero .hero-logo img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .hero p {
+            color: var(--muted);
+            font-size: 1.08rem;
+            max-width: 520px;
+            margin-bottom: 34px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
+            border: none;
+            padding: 16px 30px;
+            font-weight: 900;
+            border-radius: 16px;
+            cursor: pointer;
+            color: #fff;
+            box-shadow: 0 0 45px rgba(96, 165, 250, .35);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 60px rgba(96, 165, 250, 0.5), 0 0 120px rgba(167, 139, 250, 0.25);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(96, 165, 250, .45);
+            color: var(--apollo-1);
+            padding: 16px 30px;
+            border-radius: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .hero-card {
+            position: relative;
+            background: linear-gradient(180deg, #0b1220, #07070a);
+            border-radius: 30px;
+            padding: 36px 34px;
+            border: 1px solid rgba(96, 165, 250, .18);
+            box-shadow:
+                inset 0 0 50px rgba(96, 165, 250, .06),
+                0 25px 90px rgba(0, 0, 0, .9);
+            overflow: hidden;
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background: conic-gradient(from 0deg,
+                    transparent,
+                    rgba(167, 139, 250, .08),
+                    transparent);
+            animation: spin 22s linear infinite;
+            pointer-events: none;
+        }
+
+        .hero-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 22px;
+            color: var(--apollo-1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 18px 0;
+            font-size: 1.05rem;
+            color: #e6e6e6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .trending-section {
+            max-width: 1300px;
+            margin: 0 auto 80px;
+            padding: 0 28px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .trending-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 12px;
+        }
+
+        .trending-header h2 {
+            font-size: 0.9rem;
+            color: var(--apollo-1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .line {
+            height: 1px;
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.25), transparent);
+            flex-grow: 1;
+        }
+
+        .scroll-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        }
+
+        .horizontal-scroll {
+            display: inline-flex;
+            gap: 15px;
+            padding: 10px 0;
+            will-change: transform;
+        }
+
+        @keyframes autoscroll {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .game-card {
+            min-width: 180px;
+            height: 100px;
+            background: #0a0a0a;
+            border: 1px solid rgba(96, 165, 250, 0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            border-color: var(--apollo-1);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+            transition: opacity 0.4s;
+        }
+
+        .game-card:hover img {
+            opacity: 0.8;
+        }
+
+        .game-card .game-info {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 8px 12px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+
+        .game-card .game-info span {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(96, 165, 250, 0.16);
+            padding: 24px;
+            background: rgba(5, 5, 5, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-left .logo {
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .footer-links a,
+        .footer-links button {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .footer-links a:hover,
+        .footer-links button:hover {
+            color: var(--apollo-1);
+        }
+
+        .footer-right {
+            font-size: 0.85rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-dot {
+            color: #4CAF50;
+            font-size: 0.7rem;
+            vertical-align: middle;
+        }
+
+        #particles {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popup-box {
+            position: relative;
+            background: linear-gradient(180deg, #0b1220, #09090b);
+            border: 1px solid rgba(96, 165, 250, .25);
+            border-radius: 24px;
+            padding: 36px 40px;
+            width: min(420px, 90%);
+            box-shadow: 0 0 60px rgba(96, 165, 250, .25), 0 0 90px rgba(167, 139, 250, .12), 0 30px 90px rgba(0, 0, 0, .9);
+            text-align: center;
+        }
+
+        #popup-box h2 {
+            color: var(--apollo-1);
+            margin-bottom: 12px;
+        }
+
+        #popup-box p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        #popup-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--apollo-1);
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        #popup-close:hover {
+            color: #ffffff !important;
+        }
+
+        #discord-btn {
+            margin-top: 20px;
+            background-color: #5865F2;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+
+        #discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.5);
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding-top: 60px;
+            }
+
+            .hero p {
+                margin: 0 auto 34px;
+            }
+
+            .actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="particles"></canvas>
+
+    <div id="popup-overlay">
+        <div id="popup-box">
+            <button id="popup-close">✕</button>
+            <h2>Welcome to Apollo</h2>
+            <p>Hey! Welcome to Apollo! We work hard on our site, and would appreciate it if you joined our Discord
+                server. Thank you!</p>
+            <a href="https://discord.gg/3V2m5zzQDN" target="_blank">
+                <button id="discord-btn">Join the Discord</button>
+            </a>
+        </div>
+    </div>
+
+    <header>
+        <div class="nav">
+            <div class="logo" onclick="window.location.href='index.html'"><img src="images/logo.png" alt="Apollo"></div>
+            <div style="display:flex; gap:14px;">
+                <a href="index.html"><button><i class="fa-solid fa-house"
+                            style="margin-right:5px;"></i>Home</button></a>
+                <a href="play.html"><button><i class="fa-solid fa-gamepad"
+                            style="margin-right:5px;"></i>Games</button></a>
+                <a href="apps.html"><button><i class="fa-solid fa-rocket"
+                            style="margin-right:5px;"></i>Apps</button></a>
+                <a href="unblocker.html"><button><i class="fa-solid fa-unlock"
+                            style="margin-right:5px;"></i>Unblocker</button></a>
+                <a href="admin.html" id="adminNavBtn" style="display:none;"><button><i class="fa-solid fa-shield-halved"
+                            style="margin-right:5px;"></i>Admin</button></a>
+                <a href="settings.html"><button><i class="fa-solid fa-gear"
+                            style="margin-right:5px;"></i>Settings</button></a>
+                <a href="login.html"><button id="loginNavBtn"><i class="fa-solid fa-user"
+                            style="margin-right:5px;"></i>Login</button></a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div>
+            <div class="hero-logo"><img src="images/logo.png" alt="Apollo Logo"></div>
+            <p>This website is not intended for use during school hours. Please only access it outside of school. The
+                developer of Apollo (Tyson) is not responsible for any consequences if users choose to use it at
+                school.</p>
+            <div class="actions">
+                <a href="play.html"><button class="btn-primary">Play Now</button></a>
+                <a href="#" onclick="cloakTab()"><button class="btn-outline">Cloak Tab</button></a>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <h3>Live Platform Stats</h3>
+            <div class="stat"><span>Games Available</span><strong id="game-total">...</strong></div>
+            <div class="stat"><span>Players Online</span><strong id="players-count">Loading...</strong></div>
+            <div class="stat"><span>Status</span><strong>Online</strong></div>
+        </div>
+    </section>
+
+    <div class="trending-section">
+        <div class="trending-header">
+            <h2><i class="fa-solid fa-fire" style="color: var(--apollo-2);"></i> Featured Games</h2>
+            <div class="line"></div>
+        </div>
+        <div class="scroll-container">
+            <div class="horizontal-scroll" id="game-scroller"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-left">
+                <div class="logo">APOLLO</div>
+                <span style="color: rgba(96,165,250,0.25)">|</span>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="play.html">Games</a>
+                    <a href="apps.html">Apps</a>
+                    <a href="https://discord.gg/3V2m5zzQDN" target="_blank">Discord</a>
+                    <button onclick="openDmca()">DMCA</button>
+                </div>
+            </div>
+            <div class="footer-right">
+                <span>&copy; 2026 Owned by <strong>Apollo Team</strong></span>
+                <span style="color: rgba(96,165,250,0.25)">|</span>
+                <span><span class="status-dot">●</span> All games online</span>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <script>
+        const gamesUrls = [
+            'data/games.json',
+            'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/games.json',
+        ];
+
+        async function fetchFirstJson(urls) {
+            let lastErr = null;
+            for (const url of urls) {
+                try {
+                    const res = await fetch(url, { cache: 'no-store' });
+                    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+                    return await res.json();
+                } catch (e) {
+                    lastErr = e;
+                }
+            }
+            throw lastErr ?? new Error('Failed to load JSON');
+        }
+
+        async function loadGames() {
+            const featuredList = [
+                "Among Us",
+                "Minecraft 1.12",
+                "Drive Mad",
+                "R.E.P.O",
+                "Survivor.io",
+                "Slope",
+                "Getting Over It with Bennett Foddy"
+            ];
+
+            try {
+                let games = await fetchFirstJson(gamesUrls);
+
+                // Correctly set the total count before filtering
+                document.getElementById('game-total').textContent = games.length;
+
+                let filteredGames = games.filter(g =>
+                    g.name && featuredList.includes(g.name)
+                );
+
+                const scroller = document.getElementById('game-scroller');
+
+                const createCard = (game) => {
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
+                    card.onclick = () => window.location.href = 'play.html';
+
+                    card.innerHTML = `
+                <img src="${game.image || ''}">
+                <div class="game-info">
+                    <span><i class="fa-solid fa-fire" style="color: var(--apollo-2);"></i> ${game.name}</span>
+                </div>`;
+                    return card;
+                };
+
+                scroller.innerHTML = '';
+
+                if (filteredGames.length > 0) {
+                    [...filteredGames, ...filteredGames].forEach(game => {
+                        const card = createCard(game);
+                        scroller.appendChild(card);
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+                // Fallback: still render featured list (names only) so the section isn't empty.
+                const scroller = document.getElementById('game-scroller');
+                if (scroller) {
+                    scroller.innerHTML = '';
+                    [...featuredList, ...featuredList].forEach(name => {
+                        const card = document.createElement('div');
+                        card.className = 'game-card';
+                        card.onclick = () => window.location.href = 'play.html';
+                        card.innerHTML = `
+                    <img src="">
+                    <div class="game-info">
+                        <span><i class="fa-solid fa-fire" style="color: var(--apollo-2);"></i> ${name}</span>
+                    </div>`;
+                        scroller.appendChild(card);
+                    });
+                }
+            }
+        }
+        loadGames();
+
+
+
+        const canvas = document.getElementById("particles");
+        const ctx = canvas.getContext("2d");
+        let particlesArray = [];
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() { ctx.fillStyle = 'rgba(96,165,250,0.22)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        function initParticles() { for (let i = 0; i < 80; i++) particlesArray.push(new Particle()); }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => { p.update(); p.draw(); });
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a + 1; b < particlesArray.length; b++) {
+                    const dx = particlesArray[a].x - particlesArray[b].x;
+                    const dy = particlesArray[a].y - particlesArray[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(167,139,250,${1 - distance / 120} )`;
+                        ctx.lineWidth = 0.7;
+                        ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+        initParticles(); animate();
+
+        function openDmca() { alert("DMCA Notice: Contact tyson!"); }
+        function cloakTab() {
+            var win = window.open();
+            win.document.body.style.margin = "0";
+            var iframe = win.document.createElement("iframe");
+            iframe.style.width = "100%"; iframe.style.height = "100%"; iframe.style.border = "none";
+            iframe.src = window.location.href;
+            win.document.body.appendChild(iframe);
+        }
+        document.getElementById("popup-close").onclick = () => document.getElementById("popup-overlay").style.display = "none";
+
+        // Apply saved theme
+        (function applyTheme() {
+            const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
+            const r = document.documentElement.style;
+            if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
+            if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
+            if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
+            if (t.bg) r.setProperty('--bg', t.bg);
+            if (t.text) r.setProperty('--text', t.text);
+            // Update login nav label
+            const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
+            const btn = document.getElementById('loginNavBtn');
+            const adminBtn = document.getElementById('adminNavBtn');
+
+            if (session) {
+                if (btn) btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
+
+                // Robustness: Fix stale admin sessions missing the role property
+                if (session.username.toLowerCase() === 'admin' && session.role !== 'admin') {
+                    session.role = 'admin';
+                    localStorage.setItem('apollo_session', JSON.stringify(session));
+                }
+
+                if (adminBtn && session.role === 'admin') {
+                    adminBtn.style.display = 'inline-block';
+                }
+            }
+        })();
+
+        (function () {
+            const scroller = document.getElementById('game-scroller');
+            if (!scroller) return;
+
+            const pixelsPerSecond = 80;
+            const easingMs = 350;
+
+            let playing = true;
+            let ease = 1;
+            let lastTimestamp = null;
+            let scrollX = 0;
+            let animationId = null;
+
+            function rafStep(ts) {
+                if (lastTimestamp == null) lastTimestamp = ts;
+                const dt = ts - lastTimestamp;
+                lastTimestamp = ts;
+
+                const easeTarget = playing ? 1 : 0;
+                const diff = easeTarget - ease;
+                if (Math.abs(diff) > 0.001) {
+                    ease += diff * Math.min(1, dt / easingMs);
+                } else {
+                    ease = easeTarget;
+                }
+
+                if (scroller.children.length > 0) {
+                    scrollX -= pixelsPerSecond * (dt / 1000) * ease;
+                    let totalWidth = 0;
+                    for (let i = 0; i < scroller.children.length / 2; ++i) {
+                        totalWidth += scroller.children[i].offsetWidth + 15;
+                    }
+                    if (totalWidth > 0) {
+                        while (scrollX <= -totalWidth) scrollX += totalWidth;
+                        scroller.style.transform = `translateX(${scrollX}px)`;
+                    }
+                }
+                animationId = requestAnimationFrame(rafStep);
+            }
+
+            function startScrollRAF() {
+                if (animationId) return;
+                lastTimestamp = null;
+                animationId = requestAnimationFrame(rafStep);
+            }
+
+            scroller.addEventListener("mouseenter", () => playing = false);
+            scroller.addEventListener("mouseleave", () => playing = true);
+
+            window.addEventListener("resize", () => scrollX = 0);
+
+            window.addEventListener('DOMContentLoaded', startScrollRAF);
+            if (document.readyState !== "loading") startScrollRAF();
+        })();
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</body>
+
+</html>
