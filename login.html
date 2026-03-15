@@ -508,17 +508,6 @@
 
     const authDB = window.apolloDB;
 
-    async function ensureAdmin() {
-      try {
-        const snap = await authDB.ref('apollo_users/admin').once('value');
-        if (!snap.exists()) {
-          await authDB.ref('apollo_users/admin').set({
-            username: 'admin', password: 'apollo123',
-            role: 'admin', created: Date.now(), lastLogin: null
-          });
-        }
-      } catch(e) { }
-    }
 
     // Interface management
     function switchTab(tab) {
@@ -613,7 +602,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      ensureAdmin();
       const session = getSession();
       if (session) showLoggedIn(session.username, session.role);
     });
