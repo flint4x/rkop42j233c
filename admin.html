@@ -62,7 +62,6 @@ header {
 }
 .nav a button:hover, .nav button:hover { transform: translateY(-2px) scale(1.03); }
 
-/* Page */
 .page { max-width: 1400px; margin: 48px auto 80px; padding: 0 28px; position: relative; z-index: 1; animation: fadeUp 0.45s ease both; }
 @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
@@ -71,7 +70,6 @@ header {
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .page-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
 
-/* Stat cards */
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 18px; margin-bottom: 32px; }
 .stat-card {
   background: linear-gradient(180deg,#0b1220,#09090b);
@@ -85,7 +83,6 @@ header {
 .stat-card .sc-value { font-size: 2rem; font-weight: 900; color: var(--text); }
 .stat-card .sc-value span { font-size: 0.75rem; color: var(--muted); font-weight: 500; display: block; margin-top: 2px; }
 
-/* Controls bar */
 .controls { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
 .search-input {
   flex: 1; min-width: 200px; padding: 11px 16px; background: rgba(255,255,255,.04);
@@ -101,7 +98,6 @@ header {
 }
 .filter-select option { background: #0d0d0d; }
 
-/* Table */
 .table-wrap {
   background: linear-gradient(180deg,#0b1220,#09090b);
   border: 1px solid rgba(96,165,250,.18); border-radius: 20px;
@@ -118,7 +114,6 @@ tbody tr:last-child { border-bottom: none; }
 tbody tr:hover { background: rgba(96,165,250,.04); }
 tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 
-/* User cell */
 .user-cell { display: flex; align-items: center; gap: 12px; }
 .user-avatar {
   width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
@@ -129,7 +124,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 .user-name { font-weight: 700; }
 .user-key { font-size: 0.72rem; color: var(--muted); }
 
-/* Role badge */
 .badge {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 4px 10px; border-radius: 20px; font-size: 0.73rem; font-weight: 700;
@@ -138,10 +132,8 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 .badge-user  { background: rgba(96,165,250,.10); color: var(--apollo-1); border: 1px solid rgba(96,165,250,.2); }
 .badge-banned { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
 
-/* Date cell */
 .date-cell { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
 
-/* Action buttons */
 .action-cell { display: flex; gap: 8px; }
 .btn-act {
   padding: 6px 12px; border-radius: 9px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
@@ -152,11 +144,9 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 .btn-demote  { background: rgba(96,165,250,.12); color: var(--apollo-1); border: 1px solid rgba(96,165,250,.2); }
 .btn-delete  { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
 
-/* Empty state */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
 .empty-state i { font-size: 2.5rem; margin-bottom: 16px; opacity: 0.4; display: block; color: var(--apollo-1); }
 
-/* Toast */
 .toast {
   position: fixed; bottom: 28px; right: 28px;
   background: linear-gradient(135deg,#0b1220,#09090b);
@@ -170,7 +160,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
 .toast.show { transform: translateY(0); opacity: 1; }
 .toast i { color: #4ade80; }
 
-/* Loading spinner */
 .spinner { text-align: center; padding: 60px; color: var(--muted); }
 .spinner i { font-size: 2rem; color: var(--apollo-1); animation: spin 1s linear infinite; }
 
@@ -200,7 +189,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
   <div class="page-title"><i class="fa-solid fa-shield-halved" style="margin-right:12px;opacity:.8;"></i>Admin Panel</div>
   <p class="page-sub">Manage all Apollo user accounts in real-time.</p>
 
-  <!-- Stat cards -->
   <div class="stat-grid">
     <div class="stat-card">
       <div class="sc-label"><i class="fa-solid fa-users"></i>Total Users</div>
@@ -220,7 +208,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
     </div>
   </div>
 
-  <!-- Controls -->
   <div class="controls">
     <input type="text" id="searchInput" class="search-input" placeholder="🔍  Search by username…" oninput="filterTable()">
     <select id="roleFilter" class="filter-select" onchange="filterTable()">
@@ -230,7 +217,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
     </select>
   </div>
 
-  <!-- Table -->
   <div class="table-wrap">
     <div class="spinner" id="loadingSpinner"><i class="fa-solid fa-circle-notch"></i></div>
     <table id="userTable" style="display:none;">
@@ -251,7 +237,6 @@ tbody td { padding: 14px 18px; font-size: 0.88rem; vertical-align: middle; }
   </div>
 </div>
 
-<!-- Access denied -->
 <div class="page" id="deniedPage" style="display:none;">
   <div style="text-align:center;padding:80px 20px;">
     <i class="fa-solid fa-lock" style="font-size:3rem;color:var(--apollo-1);margin-bottom:20px;display:block;"></i>
@@ -280,7 +265,6 @@ window.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  // Verify admin role via database for security
   db.ref('apollo_users/' + session.username.toLowerCase()).once('value').then(snap => {
     const userData = snap.val();
     if (!userData || userData.role !== 'admin') {
@@ -296,7 +280,6 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Load users from Firebase
 function loadUsers() {
   db.ref('apollo_users').on('value', snap => {
     allUsers = [];
@@ -310,7 +293,6 @@ function loadUsers() {
   });
 }
 
-// Update statistics display
 function updateStats() {
   const admins = allUsers.filter(u => u.role === 'admin').length;
   document.getElementById('statTotal').textContent  = allUsers.length;
@@ -318,14 +300,12 @@ function updateStats() {
   document.getElementById('statUsers').textContent  = allUsers.length - admins;
 }
 
-// Track online connections
 function trackOnline() {
   db.ref('connections').on('value', snap => {
     document.getElementById('statOnline').textContent = snap.numChildren();
   });
 }
 
-// Render user table
 function renderTable(users) {
   const tbody = document.getElementById('userTableBody');
   const empty = document.getElementById('emptyState');
@@ -373,7 +353,6 @@ function renderTable(users) {
   });
 }
 
-// Search and filter
 function filterTable() {
   const q    = document.getElementById('searchInput').value.toLowerCase();
   const role = document.getElementById('roleFilter').value;
@@ -385,20 +364,17 @@ function filterTable() {
   renderTable(filtered);
 }
 
-// Table actions
 async function setRole(key, role) {
   await db.ref('apollo_users/' + key).update({ role });
   toast(`Role updated to ${role}.`);
 }
 
-// Delete a user
 async function deleteUser(key) {
   if (!confirm(`Delete user "${key}"? This cannot be undone.`)) return;
   await db.ref('apollo_users/' + key).remove();
   toast('User deleted.');
 }
 
-// Utility functions
 function timeAgo(ts) {
   const diff = Date.now() - ts;
   const mins = Math.floor(diff / 60000);
@@ -428,7 +404,6 @@ function applyTheme() {
 </script>
 
 <script>
-// Visual effects
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particlesArray = [];

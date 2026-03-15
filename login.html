@@ -506,6 +506,12 @@
     function setSession(u, role) { localStorage.setItem('apollo_session', JSON.stringify({ username: u, role, loginTime: Date.now() })); }
     function clearSession() { localStorage.removeItem('apollo_session'); }
 
+    async function hashPassword(password) {
+      const msgBuffer = new TextEncoder().encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
     const authDB = window.apolloDB;
 
 
@@ -538,7 +544,8 @@
         const snap = await authDB.ref('apollo_users/' + username.toLowerCase()).once('value');
         if (!snap.exists()) return showMsg('loginMsg', 'Invalid username or password.', 'error');
         const user = snap.val();
-        if (user.password !== password) return showMsg('loginMsg', 'Invalid username or password.', 'error');
+        const hashedPass = await hashPassword(password);
+        if (user.password !== hashedPass) return showMsg('loginMsg', 'Invalid username or password.', 'error');
         await authDB.ref('apollo_users/' + username.toLowerCase()).update({ lastLogin: Date.now() });
         setSession(user.username, user.role || 'user');
         showLoggedIn(user.username, user.role || 'user');
@@ -562,8 +569,9 @@
       try {
         const snap = await authDB.ref('apollo_users/' + username.toLowerCase()).once('value');
         if (snap.exists()) return showMsg('registerMsg', 'Username already taken.', 'error');
+        const hashedPass = await hashPassword(password);
         await authDB.ref('apollo_users/' + username.toLowerCase()).set({
-          username, password, role: 'user',
+          username, password: hashedPass, role: 'user',
           created: Date.now(), lastLogin: Date.now()
         });
         setSession(username, 'user');

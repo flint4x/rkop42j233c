@@ -13,9 +13,9 @@
       --bg: #050505;
       --panel: #0d0d0d;
       --panel-soft: #131313;
-      --apollo-1: #60a5fa; /* blue */
-      --apollo-2: #a78bfa; /* purple */
-      --apollo-3: #7c3aed; /* deep purple */
+      --apollo-1: #60a5fa;
+      --apollo-2: #a78bfa;
+      --apollo-3: #7c3aed;
       --text: #f5f5f5;
       --muted: #9b9b9b;
     }
@@ -34,7 +34,6 @@
       position: relative;
     }
 
-    /* Particles & Overlays */
     #particles {
       position: fixed;
       inset: 0;
@@ -51,7 +50,6 @@
     }
     .view-section.active { display: flex; }
 
-    /* Header Navigation */
     header {
       position: sticky;
       top: 0;
@@ -96,7 +94,6 @@
       box-shadow: 0 0 65px rgba(167,139,250,.55);
     }
 
-    /* Home Hero & Stats */
     .hero {
       max-width: 1300px;
       margin: auto;
@@ -136,7 +133,6 @@
     .hero-card h3 { font-size: 1.4rem; margin-bottom: 22px; color: var(--apollo-1); position: relative; z-index: 1; }
     .stat { display: flex; justify-content: space-between; margin: 18px 0; font-size: 1.05rem; color: #e6e6e6; position: relative; z-index: 1; }
 
-    /* Trending / Scroll */
     .trending-section { max-width: 1300px; margin: 0 auto 80px; padding: 0 28px; width: 100%; }
     .trending-header { display: flex; align-items: center; margin-bottom: 15px; gap: 12px; }
     .trending-header h2 { font-size: 0.9rem; color: var(--apollo-1); text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; display: flex; align-items: center; gap: 8px; }
@@ -150,7 +146,6 @@
     .game-card .game-info { position: absolute; bottom: 0; width: 100%; padding: 8px 12px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); }
     .game-card .game-info span { color: #fff; font-weight: 600; font-size: 0.75rem; display: flex; align-items: center; gap: 5px; }
 
-    /* Apps & Games Pages */
     .content-section { max-width: 1300px; margin: auto; padding: 50px 28px 110px; text-align: center; width: 100%; }
     .content-section h1 { font-size: clamp(2.6rem, 5vw, 3.6rem); margin-bottom: 36px; font-weight: 900; background: linear-gradient(120deg, #fff, var(--apollo-1)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .search-bar { max-width: 420px; margin: 0 auto 30px; }
@@ -168,7 +163,6 @@
     .play-btn { margin-top: auto; width: 100%; background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3)); border: none; padding: 14px; border-radius: 18px; font-weight: 900; color: #000; cursor: pointer; box-shadow: 0 0 30px rgba(96,165,250,.25); transition: transform .2s, box-shadow .2s; position: relative; z-index: 1; }
     .play-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 0 55px rgba(167,139,250,.35); }
 
-    /* Universal Iframe Overlay (Games & Apps) */
     .iframe-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.98); z-index: 999; justify-content: center; align-items: center; }
     .iframe-controls { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; z-index: 1000; }
     .iframe-controls button { background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3)); border: none; padding: 10px 24px; border-radius: 14px; font-weight: 800; cursor: pointer; color: #000; box-shadow: 0 0 25px rgba(96,165,250,.22); transition: transform 0.2s ease; }
@@ -176,7 +170,6 @@
     #overlayContainer { width: 95vw; height: 90vh; margin-top: 60px; display: flex; justify-content: center; align-items: center; }
     #overlayContainer iframe { width: 100%; height: 100%; border: 1px solid rgba(96,165,250,0.22); border-radius: 18px; background: #000; }
 
-    /* Footer */
     footer { margin-top: auto; border-top: 1px solid rgba(96,165,250,0.16); padding: 24px; background: rgba(5, 5, 5, 0.8); position: relative; z-index: 1; width: 100%; }
     .footer-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
     .footer-left { display: flex; align-items: center; gap: 15px; }
@@ -187,7 +180,6 @@
     .footer-right { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 15px; }
     .status-dot { color: #4CAF50; font-size: 0.7rem; vertical-align: middle; }
 
-    /* Popup */
     #popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
     #popup-box { position: relative; background: linear-gradient(180deg, #0b1220, #090909); border: 1px solid rgba(96,165,250,.25); border-radius: 24px; padding: 36px 40px; width: min(420px, 90%); box-shadow: 0 0 60px rgba(96,165,250,.25), 0 0 90px rgba(167,139,250,.12), 0 30px 90px rgba(0,0,0,.9); text-align: center; }
     #popup-box h2 { color: var(--apollo-1); margin-bottom: 12px; }
@@ -317,7 +309,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
-// SPA Navigation Logic
 function switchView(viewId) {
   document.querySelectorAll('.view-section').forEach(section => {
     section.classList.remove('active');
@@ -326,7 +317,6 @@ function switchView(viewId) {
   window.scrollTo(0, 0);
 }
 
-// Data Fetching & Rendering Logic
 const urls = {
   games: ['data/games.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/games.json'],
   apps: ['data/apps.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/apps.json']
@@ -380,7 +370,6 @@ function renderGridData(data, containerId) {
 
 async function initializeData() {
   try {
-    // Load Games
     const games = await fetchFirstJson(urls.games);
     document.getElementById('game-total').textContent = games.length;
     renderGridData(games, 'gameList');
@@ -413,7 +402,6 @@ async function initializeData() {
 
 initializeData();
 
-// Search Functionality
 document.getElementById('search-games').addEventListener('input', (e) => filterList(e.target.value, 'gameList'));
 document.getElementById('search-apps').addEventListener('input', (e) => filterList(e.target.value, 'appList'));
 
@@ -424,7 +412,6 @@ function filterList(query, containerId) {
   });
 }
 
-// Universal Overlay & Iframe Controls
 const overlay = document.getElementById('iframeOverlay');
 const overlayContainer = document.getElementById('overlayContainer');
 let currentIframe = null;
@@ -464,7 +451,6 @@ document.getElementById('fullscreenBtn').onclick = () => {
 
 overlay.addEventListener('click', e => { if (e.target === overlay) document.getElementById('closeBtn').onclick(); });
 
-// Miscellaneous Interactions
 function openDmca() { alert("DMCA Notice: Contact scentedcheeseburger on Discord!"); }
 function cloakTab() {
   var win = window.open();
@@ -477,7 +463,6 @@ function cloakTab() {
 
 document.getElementById("popup-close").onclick = () => document.getElementById("popup-overlay").style.display = "none";
 
-// Auto-Scroller Animation
 let animationId = null;
 function startScrollRAF() {
   const scroller = document.getElementById('game-scroller');
@@ -510,7 +495,6 @@ function startScrollRAF() {
   animationId = requestAnimationFrame(step);
 }
 
-// Particle Canvas Animation
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 let particlesArray = [];
@@ -557,7 +541,6 @@ function animateParticles() {
 }
 animateParticles();
 
-// Firebase Initialization
 const firebaseConfig = { apiKey: "AIzaSyCAMwP6d2aZ7y1XK0YUujKmDg-50Tm_xQw", authDomain: "goldhub-c1a71.firebaseapp.com", databaseURL: "https://goldhub-c1a71-default-rtdb.firebaseio.com/", projectId: "goldhub-c1a71" };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();

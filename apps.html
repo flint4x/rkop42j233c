@@ -18,9 +18,7 @@
       --bg: #050505;
       --text: #f5f5f5;
       --apollo-1: #60a5fa;
-      /* blue */
       --apollo-3: #7c3aed;
-      /* deep purple */
       --panel: #0d0d0d;
     }
 
@@ -350,7 +348,6 @@
     function createFreshIframe() {
       iframeContainer.innerHTML = '';
       const iframe = document.createElement('iframe');
-      // Permissions for modern games
       iframe.allow = 'autoplay; fullscreen; gamepad; accelerometer; gyroscope; pointer-lock; microphone';
       iframeContainer.appendChild(iframe);
       currentIframe = iframe;
@@ -407,7 +404,7 @@
       `;
 
           card.querySelector('.play').addEventListener('click', () => {
-            overlay.style.display = 'flex'; // Uses flex to center content
+            overlay.style.display = 'flex';
             const iframe = createFreshIframe();
 
             fetch(game.src)
@@ -434,10 +431,8 @@
                     ads?.forEach(ad => ad.remove());
                   };
 
-                  // remove immediately
                   removeAds();
 
-                  // keep removing if game recreates ads
                   const observer = new MutationObserver(removeAds);
 
                   observer.observe(

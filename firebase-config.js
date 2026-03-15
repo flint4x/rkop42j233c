@@ -9,20 +9,16 @@ const firebaseConfig = {
   measurementId: "G-1BFWMYVXKH"
 };
 
-// Initialize Firebase
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// Global database reference
 window.apolloDB = firebase.database();
 
-// Real-time online counter
 (function trackPresence() {
   const db = window.apolloDB;
   const con = db.ref('.info/connected');
 
-  // Sanitize hostname to use as a database key (replace '.' with '_')
   const domainKey = window.location.hostname.replace(/\./g, '_');
   const connectionsRef = db.ref(`connections/${domainKey}`);
 
@@ -32,7 +28,6 @@ window.apolloDB = firebase.database();
     userConn.onDisconnect().remove();
   });
 
-  // Broadcast online count to any element with id="players-count" OR id="statOnline"
   connectionsRef.on('value', snap => {
     const count = snap.numChildren();
     const elIndex = document.getElementById('players-count');
