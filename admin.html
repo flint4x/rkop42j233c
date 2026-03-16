@@ -257,7 +257,6 @@ const db = window.apolloDB;
 let allUsers = [];
 
 window.addEventListener('DOMContentLoaded', () => {
-  applyTheme();
   const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
 
   if (!session) {
@@ -385,22 +384,6 @@ function timeAgo(ts) {
   return new Date(ts).toLocaleDateString();
 }
 
-function toast(msg) {
-  const el = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
-}
-
-function applyTheme() {
-  const t = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
-  const r = document.documentElement.style;
-  if (t.apollo1) r.setProperty('--apollo-1', t.apollo1);
-  if (t.apollo2) r.setProperty('--apollo-2', t.apollo2);
-  if (t.apollo3) r.setProperty('--apollo-3', t.apollo3);
-  if (t.bg)      r.setProperty('--bg', t.bg);
-  if (t.text)    r.setProperty('--text', t.text);
-}
 </script>
 
 <script>

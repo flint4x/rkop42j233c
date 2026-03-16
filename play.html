@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <script src="auth-check.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apollo – Play</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
-      crossorigin="anonymous"></script>
+<meta charset="UTF-8" />
+<script src="auth-check.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apollo – Play</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756" crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -309,29 +308,9 @@
   <div id="iframeContainer"></div>
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-  apiKey: "AIzaSyCAMwP6d2aZ7y1XK0YUujKmDg-50Tm_xQw",
-  authDomain: "goldhub-c1a71.firebaseapp.com",
-    databaseURL: "https://goldhub-c1a71-default-rtdb.firebaseio.com/",
-  projectId: "goldhub-c1a71",
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  const connectionsRef = db.ref("connections");
-  const connectedRef = db.ref(".info/connected");
-
-  connectedRef.on("value", snap => {
-    if (snap.val() === true) {
-      const con = connectionsRef.push(true);
-      con.onDisconnect().remove();
-    }
-  });
-</script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
 <script>
 const searchInput = document.getElementById('search');
@@ -548,17 +527,11 @@ animate();
   const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
   const btn = document.getElementById('loginNavBtn');
   const adminBtn = document.getElementById('adminNavBtn');
-  
   if (session && btn) {
     btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
-    
-    if (session.role === 'admin' && adminBtn) {
-      adminBtn.style.display = 'inline-block';
-    }
+    if (session.role === 'admin' && adminBtn) adminBtn.style.display = 'inline-block';
   }
 })();
 </script>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script>

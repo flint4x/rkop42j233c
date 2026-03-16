@@ -37,3 +37,18 @@ window.apolloDB = firebase.database();
   });
 })();
 
+window.saveUserTheme = async function(theme) {
+  const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
+  if (!session || !session.username) return;
+  const db = window.apolloDB;
+  await db.ref(`users/${session.username}/theme`).set(theme);
+};
+
+window.loadUserTheme = async function() {
+  const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
+  if (!session || !session.username) return null;
+  const db = window.apolloDB;
+  const snap = await db.ref(`users/${session.username}/theme`).once('value');
+  return snap.val();
+};
+

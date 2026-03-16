@@ -1,34 +1,11 @@
 const ADBLOCK_PATTERNS = [
-    "googlesyndication.com",
-    "googleadservices.com",
-    "doubleclick.net",
-    "adnxs.com",
-    "amazon-adsystem.com",
-    "rubiconproject.com",
-    "pubmatic.com",
-    "criteo.com",
-    "openx.net",
-    "taboola.com",
-    "outbrain.com",
-    "moatads.com",
-    "casalemedia.com",
-    "adsafeprotected.com",
-    "chartbeat.com",
-    "scorecardresearch.com",
-    "quantserve.com",
-    "krxd.net",
-    "demdex.net",
-    "advertising.com",
-    "adtechus.com",
-    "unityads.unity3d.com",
-    "facebook.com/tr",
-    "facebook.com/ads",
-    "graph.facebook.com/pixel",
-    "ads-api.twitter.com",
-    "analytics.twitter.com",
-    "youtube.com/api/stats/ads",
-    "youtube.com/pagead",
-    "youtube.com/get_midroll",
+    "googlesyndication.com", "googleadservices.com", "doubleclick.net", "adnxs.com",
+    "amazon-adsystem.com", "rubiconproject.com", "pubmatic.com", "criteo.com",
+    "openx.net", "taboola.com", "outbrain.com", "moatads.com", "casalemedia.com",
+    "adsafeprotected.com", "chartbeat.com", "scorecardresearch.com", "quantserve.com",
+    "krxd.net", "demdex.net", "advertising.com", "adtechus.com", "unityads.unity3d.com",
+    "facebook.com/tr", "facebook.com/ads", "graph.facebook.com/pixel", "ads-api.twitter.com",
+    "analytics.twitter.com", "youtube.com/api/stats/ads", "youtube.com/pagead", "youtube.com/get_midroll",
 ];
 
 function isAdBlocked(url) {
@@ -58,49 +35,55 @@ const scramjet = new ScramjetServiceWorker({
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
-let wispConfig = { wispurl: null, servers: [], autoswitch: true };
+const swConfig = {
+    wispurl: "wss://i-ready.math.bostoncareercounselor.com/wisp/",
+    servers: [],
+    autoswitch: true
+};
 
-async function pingServer(url) {
-    return new Promise(resolve => {
-        const start = Date.now();
-        try {
-            const ws = new WebSocket(url);
-            const t = setTimeout(() => { try { ws.close(); } catch {} resolve({ url, success: false, latency: null }); }, 3000);
-            ws.onopen = () => { clearTimeout(t); try { ws.close(); } catch {} resolve({ url, success: true, latency: Date.now() - start }); };
-            ws.onerror = () => { clearTimeout(t); resolve({ url, success: false, latency: null }); };
-        } catch { resolve({ url, success: false, latency: null }); }
-    });
-}
+importScripts("https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/sw.js");
 
-function notifyClients(msg) {
-    self.clients.matchAll().then(clients => clients.forEach(c => c.postMessage(msg)));
-}
-
-async function proactiveCheck() {
-    if (!wispConfig.autoswitch || !wispConfig.servers?.length) return;
-    const results = await Promise.all(wispConfig.servers.map(s => pingServer(s.url)));
-    const currentOk = results.find(r => r.url === wispConfig.wispurl)?.success;
-    if (!currentOk) {
-        const best = results.filter(r => r.success).sort((a,b) => a.latency - b.latency)[0];
-        if (best) {
-            wispConfig.wispurl = best.url;
-            notifyClients({ type: 'wispChanged', url: best.url, name: wispConfig.servers.find(s => s.url === best.url)?.name || 'Server', latency: best.latency });
-        }
-    }
-}
-
-self.addEventListener("message", ({ data }) => {
-    if (data.type === "config") {
-        if (data.wispurl) wispConfig.wispurl = data.wispurl;
-        if (data.servers?.length) { wispConfig.servers = data.servers; if (wispConfig.autoswitch) setTimeout(proactiveCheck, 500); }
-        if (typeof data.autoswitch !== 'undefined') wispConfig.autoswitch = data.autoswitch;
-    } else if (data.type === "ping") {
-        pingServer(wispConfig.wispurl).then(result => notifyClients({ type: 'pingResult', ...result }));
+self.addEventListener('message', (event) => {
+    if (event.data.type === 'config') {
+        if (event.data.wispurl) swConfig.wispurl = event.data.wispurl;
+        if (event.data.servers) swConfig.servers = event.data.servers;
+        if (typeof event.data.autoswitch === 'boolean') swConfig.autoswitch = event.data.autoswitch;
     }
 });
 
-// THE CORRECT PATTERN: scramjet.fetch(event) handles everything internally.
-// BareMux transport is set on the client side — the SW does not manage connections.
+async function pingWisp(url) {
+    const start = Date.now();
+    try {
+        const controller = new AbortController();
+        const tid = setTimeout(() => controller.abort(), 1500);
+        await fetch(url.replace('wss://', 'https://').replace('/wisp/', '/health') || url, { method: 'HEAD', signal: controller.signal, mode: 'no-cors' });
+        clearTimeout(tid);
+        return Date.now() - start;
+    } catch {
+        return Infinity;
+    }
+}
+
+async function findBestWisp() {
+    if (!swConfig.servers.length) return swConfig.wispurl;
+    const results = await Promise.all(swConfig.servers.map(async s => ({ url: s.url, name: s.name, ping: await pingWisp(s.url) })));
+    const working = results.filter(r => r.ping !== Infinity).sort((a, b) => a.ping - b.ping);
+    return working.length ? working[0] : { url: swConfig.wispurl, name: 'Default' };
+}
+
+let checkInProgress = false;
+async function proactiveCheck() {
+    if (!swConfig.servers?.length) return;
+    checkInProgress = true;
+    const best = await findBestWisp();
+    if (best.url !== swConfig.wispurl) {
+        swConfig.wispurl = best.url;
+        const clients = await self.clients.matchAll();
+        clients.forEach(c => c.postMessage({ type: 'wispChanged', url: best.url, name: best.name }));
+    }
+    checkInProgress = false;
+}
+
 self.addEventListener("fetch", event => {
     if (isAdBlocked(event.request.url)) {
         event.respondWith(new Response(null, { status: 204 }));

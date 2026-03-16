@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <script src="auth-check.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apollo</title>
-    <link rel="icon" type="image/png" href="images/favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
-        crossorigin="anonymous"></script>
+<meta charset="UTF-8" />
+<script src="auth-check.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apollo</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756" crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -597,19 +595,12 @@
 
         async function loadGames() {
             const featuredList = [
-                "Among Us",
-                "Minecraft 1.12",
-                "Drive Mad",
-                "R.E.P.O",
-                "Survivor.io",
-                "Slope",
-                "Getting Over It with Bennett Foddy"
+                "Among Us", "Minecraft 1.12", "Drive Mad", "R.E.P.O",
+                "Survivor.io", "Slope", "Getting Over It with Bennett Foddy"
             ];
 
             try {
                 let games = await fetchFirstJson(gamesUrls);
-
-                // Correctly set the total count before filtering
                 document.getElementById('game-total').textContent = games.length;
 
                 let filteredGames = games.filter(g =>
@@ -640,8 +631,6 @@
                     });
                 }
             } catch (e) {
-                console.error(e);
-                // Fallback: still render featured list (names only) so the section isn't empty.
                 const scroller = document.getElementById('game-scroller');
                 if (scroller) {
                     scroller.innerHTML = '';
@@ -720,10 +709,7 @@
 
             if (session && btn) {
                 btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
-
-                if (session.role === 'admin' && adminBtn) {
-                    adminBtn.style.display = 'inline-block';
-                }
+                if (session.role === 'admin' && adminBtn) adminBtn.style.display = 'inline-block';
             }
         })();
 

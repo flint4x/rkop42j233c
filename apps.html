@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <script src="auth-check.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apollo – Apps</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756"
-    crossorigin="anonymous"></script>
+<meta charset="UTF-8" />
+<script src="auth-check.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apollo – Apps</title>
+<link rel="icon" type="image/png" href="images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756" crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -570,21 +568,15 @@
 
 </html>
 
-<script>
   (function initUI() {
     const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
     const btn = document.getElementById('loginNavBtn');
     const adminBtn = document.getElementById('adminNavBtn');
-
     if (session && btn) {
       btn.innerHTML = `<i class="fa-solid fa-user" style="margin-right:5px;"></i>${session.username}`;
-
-      if (session.role === 'admin' && adminBtn) {
-        adminBtn.style.display = 'inline-block';
-      }
+      if (session.role === 'admin' && adminBtn) adminBtn.style.display = 'inline-block';
     }
   })();
-</script>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
