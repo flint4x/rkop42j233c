@@ -1,560 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apollo - Hub</title>
-  <link rel="icon" type="image/png" href="images/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <style>
-    :root {
-      --bg: #050505;
-      --panel: #0d0d0d;
-      --panel-soft: #131313;
-      --apollo-1: #60a5fa;
-      --apollo-2: #a78bfa;
-      --apollo-3: #7c3aed;
-      --text: #f5f5f5;
-      --muted: #9b9b9b;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, sans-serif; }
-
-    body {
-      min-height: 100vh;
-      background: radial-gradient(900px 500px at 20% -10%, rgba(96,165,250,.16), transparent 60%),
-                  radial-gradient(900px 500px at 80% 0%, rgba(167,139,250,.14), transparent 60%),
-                  var(--bg);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    #particles {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    
-    .view-section {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      position: relative;
-      z-index: 1;
-    }
-    .view-section.active { display: flex; }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(14px);
-      background: rgba(5,5,5,.7);
-      border-bottom: 1px solid rgba(96,165,250,.16);
-      flex-shrink: 0;
-    }
-    .nav {
-      max-width: 1300px;
-      margin: auto;
-      padding: 18px 28px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .logo {
-      font-weight: 900;
-      font-size: 1.7rem;
-      letter-spacing: 1px;
-      background: linear-gradient(120deg, #fff, var(--apollo-1), var(--apollo-2));
-      background-size: 200% auto;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shine 6s linear infinite;
-    }
-    .nav button {
-      background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-      border: none;
-      padding: 12px 22px;
-      border-radius: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 0 35px rgba(96,165,250,.35);
-      transition: transform .25s, box-shadow .25s;
-      color: #000;
-    }
-    .nav button:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 0 65px rgba(167,139,250,.55);
-    }
-
-    .hero {
-      max-width: 1300px;
-      margin: auto;
-      padding: 110px 28px 80px;
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 70px;
-      align-items: center;
-      width: 100%;
-    }
-    .hero h1 {
-      font-size: clamp(3rem, 6vw, 4.6rem);
-      font-weight: 900;
-      line-height: 1.02;
-      margin-bottom: 22px;
-      background: linear-gradient(120deg, #fff, var(--apollo-1));
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .hero p { color: var(--muted); font-size: 1.08rem; max-width: 520px; margin-bottom: 34px; }
-    .actions { display: flex; gap: 18px; flex-wrap: wrap; }
-    .btn-primary { background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3)); border: none; padding: 16px 30px; font-weight: 900; border-radius: 16px; cursor: pointer; color: #000; box-shadow: 0 0 45px rgba(96,165,250,.35); transition: transform 0.25s, box-shadow 0.25s; }
-    .btn-primary:hover { transform: scale(1.08); box-shadow: 0 0 60px rgba(96,165,250,0.5), 0 0 120px rgba(167,139,250,0.25); }
-    .btn-outline { background: transparent; border: 1px solid rgba(96,165,250,.45); color: var(--apollo-1); padding: 16px 30px; border-radius: 16px; font-weight: 700; cursor: pointer; }
-    
-    .hero-card {
-      position: relative;
-      background: linear-gradient(180deg, #0b1220, #090909);
-      border-radius: 30px;
-      padding: 36px 34px;
-      border: 1px solid rgba(96,165,250,.18);
-      box-shadow: inset 0 0 50px rgba(96,165,250,.06), 0 25px 90px rgba(0,0,0,.9);
-      overflow: hidden;
-    }
-    .hero-card::after { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 0deg, transparent, rgba(167,139,250,.08), transparent); animation: spin 22s linear infinite; pointer-events: none; }
-    .hero-card h3 { font-size: 1.4rem; margin-bottom: 22px; color: var(--apollo-1); position: relative; z-index: 1; }
-    .stat { display: flex; justify-content: space-between; margin: 18px 0; font-size: 1.05rem; color: #e6e6e6; position: relative; z-index: 1; }
-
-    .trending-section { max-width: 1300px; margin: 0 auto 80px; padding: 0 28px; width: 100%; }
-    .trending-header { display: flex; align-items: center; margin-bottom: 15px; gap: 12px; }
-    .trending-header h2 { font-size: 0.9rem; color: var(--apollo-1); text-transform: uppercase; letter-spacing: 2px; opacity: 0.9; display: flex; align-items: center; gap: 8px; }
-    .line { height: 1px; background: linear-gradient(90deg, rgba(96,165,250,0.25), transparent); flex-grow: 1; }
-    .scroll-container { width: 100%; overflow: hidden; position: relative; mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
-    .horizontal-scroll { display: inline-flex; gap: 15px; padding: 10px 0; will-change: transform; }
-    .game-card { min-width: 180px; height: 100px; background: #0a0a0a; border: 1px solid rgba(96,165,250,0.12); border-radius: 14px; overflow: hidden; cursor: pointer; position: relative; transition: transform 0.4s, border-color 0.3s; }
-    .game-card:hover { transform: scale(1.05); border-color: var(--apollo-1); }
-    .game-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; transition: opacity 0.4s; }
-    .game-card:hover img { opacity: 0.8; }
-    .game-card .game-info { position: absolute; bottom: 0; width: 100%; padding: 8px 12px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); }
-    .game-card .game-info span { color: #fff; font-weight: 600; font-size: 0.75rem; display: flex; align-items: center; gap: 5px; }
-
-    .content-section { max-width: 1300px; margin: auto; padding: 50px 28px 110px; text-align: center; width: 100%; }
-    .content-section h1 { font-size: clamp(2.6rem, 5vw, 3.6rem); margin-bottom: 36px; font-weight: 900; background: linear-gradient(120deg, #fff, var(--apollo-1)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .search-bar { max-width: 420px; margin: 0 auto 30px; }
-    .search-bar input { width: 100%; padding: 14px 18px; border-radius: 20px; border: 1px solid rgba(96,165,250,.35); background: var(--panel); color: var(--text); font-size: 1.05rem; outline: none; }
-    
-    .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 26px; padding: 40px 22px; max-width: 1250px; margin: auto; }
-    .item-card { background: linear-gradient(180deg, #0b1220, #0b0b0b); border-radius: 30px; padding: 22px 22px 26px; border: 1px solid rgba(96,165,250,.18); position: relative; overflow: hidden; transition: transform .35s, box-shadow .35s; }
-    .item-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(167,139,250,0.22), transparent 70%); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
-    .item-card:hover::before { opacity: 1; }
-    .item-card:hover { transform: translateY(-12px) scale(1.04); box-shadow: 0 30px 70px rgba(0,0,0,.9), 0 0 60px rgba(96,165,250,.25), 0 0 70px rgba(167,139,250,.18); }
-    .thumb { width: 100%; height: 170px; border-radius: 22px; overflow: hidden; margin-bottom: 18px; box-shadow: 0 0 30px rgba(96,165,250,.18); position: relative; z-index: 1; }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
-    .item-card:hover .thumb img { transform: scale(1.08); }
-    .item-card h3 { margin-bottom: 16px; color: var(--apollo-1); font-size: 1.25rem; font-weight: 800; text-align: center; position: relative; z-index: 1; }
-    .play-btn { margin-top: auto; width: 100%; background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3)); border: none; padding: 14px; border-radius: 18px; font-weight: 900; color: #000; cursor: pointer; box-shadow: 0 0 30px rgba(96,165,250,.25); transition: transform .2s, box-shadow .2s; position: relative; z-index: 1; }
-    .play-btn:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 0 55px rgba(167,139,250,.35); }
-
-    .iframe-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.98); z-index: 999; justify-content: center; align-items: center; }
-    .iframe-controls { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; z-index: 1000; }
-    .iframe-controls button { background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3)); border: none; padding: 10px 24px; border-radius: 14px; font-weight: 800; cursor: pointer; color: #000; box-shadow: 0 0 25px rgba(96,165,250,.22); transition: transform 0.2s ease; }
-    .iframe-controls button:hover { transform: scale(1.05); }
-    #overlayContainer { width: 95vw; height: 90vh; margin-top: 60px; display: flex; justify-content: center; align-items: center; }
-    #overlayContainer iframe { width: 100%; height: 100%; border: 1px solid rgba(96,165,250,0.22); border-radius: 18px; background: #000; }
-
-    footer { margin-top: auto; border-top: 1px solid rgba(96,165,250,0.16); padding: 24px; background: rgba(5, 5, 5, 0.8); position: relative; z-index: 1; width: 100%; }
-    .footer-container { max-width: 1300px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
-    .footer-left { display: flex; align-items: center; gap: 15px; }
-    .footer-left .logo { font-size: 1.1rem; }
-    .footer-links { display: flex; gap: 20px; align-items: center; }
-    .footer-links button, .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; background: none; border: none; cursor: pointer; padding: 0; }
-    .footer-links button:hover, .footer-links a:hover { color: var(--apollo-1); }
-    .footer-right { font-size: 0.85rem; color: var(--muted); display: flex; align-items: center; gap: 15px; }
-    .status-dot { color: #4CAF50; font-size: 0.7rem; vertical-align: middle; }
-
-    #popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(10px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-    #popup-box { position: relative; background: linear-gradient(180deg, #0b1220, #090909); border: 1px solid rgba(96,165,250,.25); border-radius: 24px; padding: 36px 40px; width: min(420px, 90%); box-shadow: 0 0 60px rgba(96,165,250,.25), 0 0 90px rgba(167,139,250,.12), 0 30px 90px rgba(0,0,0,.9); text-align: center; }
-    #popup-box h2 { color: var(--apollo-1); margin-bottom: 12px; }
-    #popup-box p { color: var(--muted); font-size: 0.95rem; }
-    #popup-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--apollo-1); font-size: 1.2rem; font-weight: 900; cursor: pointer; transition: color 0.2s; }
-    #popup-close:hover { color: #ffffff !important; }
-    #discord-btn { margin-top: 20px; background-color: #5865F2; border: none; color: #fff; font-weight: 700; padding: 12px 24px; border-radius: 12px; cursor: pointer; font-size: 1rem; transition: transform 0.25s, box-shadow 0.25s; }
-    #discord-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(88,101,242,0.5); }
-
-    @keyframes shine { to { background-position: 200% center; } }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    @media (max-width: 768px) {
-      .footer-container { flex-direction: column; text-align: center; gap: 15px; }
-      .hero { grid-template-columns: 1fr; text-align: center; padding-top: 60px; }
-      .hero p { margin: 0 auto 34px; }
-      .actions { justify-content: center; }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apollo - Hub</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
 
-<canvas id="particles"></canvas>
+<body class="custom-cursor">
+    <nav class="glass">
+        <div class="logo" onclick="switchView('home')" style="cursor: pointer; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px;">
+            APOLLO
+        </div>
+        <div class="nav-links">
+            <button onclick="switchView('home')" class="glass">Hub</button>
+            <button onclick="switchView('games')" class="glass">Games</button>
+            <button onclick="switchView('apps')" class="glass">Apps</button>
+        </div>
+    </nav>
 
-<div id="popup-overlay">
-  <div id="popup-box">
-    <button id="popup-close">✕</button>
-    <h2>Welcome to Apollo</h2>
-    <p>Hey! Welcome to Apollo! We work hard on our site, and would appreciate it if you joined our Discord server. Thank you!</p>
-    <a href="https://discord.gg/tnY8WCmHPj" target="_blank">
-      <button id="discord-btn">Join the Discord</button>
-    </a>
-  </div>
-</div>
+    <div id="view-home" class="view-section active">
+        <section class="hero container">
+            <div class="hero-content">
+                <h1>Apollo <span style="color: var(--accent-color);">Hub</span></h1>
+                <p>Explore games and apps in a clean, fast hub. Optimized for all devices.</p>
+                <div class="hero-btns">
+                    <button class="btn btn-primary" onclick="switchView('games')">Get Started</button>
+                    <button class="btn btn-outline" onclick="cloakTab()">Cloak Tab</button>
+                </div>
+            </div>
+            <div class="glass-card" style="padding: 30px; min-width: 300px;">
+                <h3 style="color: var(--accent-color); margin-bottom: 20px;">Platform Stats</h3>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-secondary);">Games</span>
+                        <strong id="game-total">...</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: var(--text-secondary);">Status</span>
+                        <strong style="color: #00ff88;">Online</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<header>
-  <div class="nav">
-    <div class="logo">APOLLO</div>
-    <div style="display:flex; gap:14px;">
-      <button onclick="switchView('home')">Hub</button>
-      <button onclick="switchView('games')">Games</button>
-      <button onclick="switchView('apps')">Apps</button>
+        <section class="container" style="margin-top: 50px;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+                <h2 style="font-size: 0.9rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 2px;">Featured Games</h2>
+                <div style="height: 1px; background: var(--border-color); flex: 1;"></div>
+            </div>
+            <div id="game-scroller" style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scrollbar-width: none;">
+                <!-- Scroller items -->
+            </div>
+        </section>
     </div>
-  </div>
-</header>
 
-<div id="view-home" class="view-section active">
-  <section class="hero">
-    <div>
-      <h1>Apollo</h1>
-      <p>Explore games and apps in a clean, fast hub.</p>
-      <div class="actions">
-        <button class="btn-primary" onclick="switchView('games')">Play Now</button>
-        <button class="btn-outline" onclick="cloakTab()">Cloak Tab</button>
-      </div>
+    <div id="view-games" class="view-section">
+        <section class="container" style="padding-top: 50px;">
+            <h1 style="text-align: center; margin-bottom: 30px;">Games</h1>
+            <div style="max-width: 500px; margin: 0 auto 40px;">
+                <input type="text" id="search-games" class="glass" placeholder="Search games..." style="width: 100%; padding: 15px 20px; border-radius: 12px; color: var(--text-primary); outline: none;">
+            </div>
+            <div class="grid" id="gameList"></div>
+        </section>
     </div>
-    <div class="hero-card">
-      <h3>Live Platform Stats</h3>
-      <div class="stat"><span>Games Available</span><strong id="game-total">...</strong></div>
-      <div class="stat"><span>Players Online</span><strong id="players-count">Loading...</strong></div>
-      <div class="stat"><span>Status</span><strong>Online</strong></div>
+
+    <div id="view-apps" class="view-section">
+        <section class="container" style="padding-top: 50px;">
+            <h1 style="text-align: center; margin-bottom: 30px;">Apps</h1>
+            <div style="max-width: 500px; margin: 0 auto 40px;">
+                <input type="text" id="search-apps" class="glass" placeholder="Search apps..." style="width: 100%; padding: 15px 20px; border-radius: 12px; color: var(--text-primary); outline: none;">
+            </div>
+            <div class="grid" id="appList"></div>
+        </section>
     </div>
-  </section>
 
-  <div class="trending-section">
-    <div class="trending-header">
-      <h2><i class="fa-solid fa-fire" style="color: var(--apollo-2);"></i> Featured Games</h2>
-      <div class="line"></div>
+    <div class="iframe-overlay" id="iframeOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column;">
+        <div style="display: flex; justify-content: center; gap: 20px; padding: 20px;">
+            <button class="btn btn-outline" onclick="closeIframe()">Close ✕</button>
+            <button class="btn btn-primary" onclick="fullscreenIframe()">Fullscreen ⛶</button>
+        </div>
+        <div id="overlayContainer" style="flex: 1; padding: 20px;">
+            <iframe id="gameIframe" style="width: 100%; height: 100%; border: 1px solid var(--border-color); border-radius: 12px; background: #000;"></iframe>
+        </div>
     </div>
-    <div class="scroll-container">
-      <div class="horizontal-scroll" id="game-scroller"></div>
-    </div>
-  </div>
-</div>
 
-<div id="view-games" class="view-section">
-  <section class="content-section">
-    <h1>Select a Game</h1>
-    <div class="search-bar">
-      <input type="text" id="search-games" placeholder="Search games...">
-    </div>
-    <div class="grid-container" id="gameList"></div>
-  </section>
-</div>
+    <footer class="glass" style="margin-top: 100px; padding: 40px 0;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <div class="logo" style="font-weight: 800; font-size: 1.2rem; margin-bottom: 10px;">APOLLO</div>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">Clean. Fast. Secure.</p>
+            </div>
+            <div style="display: flex; gap: 30px;">
+                <a href="#" onclick="switchView('home')" style="color: var(--text-secondary); text-decoration: none;">Hub</a>
+                <a href="https://discord.gg/3V2m5zzQDN" target="_blank" style="color: var(--text-secondary); text-decoration: none;"><i class="fa-brands fa-discord"></i> Discord</a>
+                <a href="#" style="color: var(--text-secondary); text-decoration: none;">DMCA</a>
+            </div>
+            <div style="color: var(--text-secondary); font-size: 0.8rem;">
+                &copy; 2026 Apollo. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
-<div id="view-apps" class="view-section">
-  <section class="content-section">
-    <h1>Select an App</h1>
-    <div class="search-bar">
-      <input type="text" id="search-apps" placeholder="Search apps...">
-    </div>
-    <div class="grid-container" id="appList"></div>
-  </section>
-</div>
+    <script src="performance.js"></script>
+    <script>
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
 
-<div class="iframe-overlay" id="iframeOverlay">
-  <div class="iframe-controls">
-    <button id="closeBtn">Close ✕</button>
-    <button id="fullscreenBtn">Fullscreen ⛶</button>
-  </div>
-  <div id="overlayContainer"></div>
-</div>
+        const urls = {
+            games: ['data/games.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/games.json'],
+            apps: ['data/apps.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/apps.json']
+        };
 
-<footer>
-  <div class="footer-container">
-    <div class="footer-left">
-      <div class="logo">APOLLO</div>
-      <span style="color: rgba(96,165,250,0.25)">|</span>
-      <div class="footer-links">
-        <button onclick="switchView('home')">Hub</button>
-        <button onclick="switchView('games')">Games</button>
-        <button onclick="switchView('apps')">Apps</button>
-        <a href="https://discord.gg/tnY8WCmHPj" target="_blank">Discord</a>
-        <button onclick="openDmca()">DMCA</button>
-      </div>
-    </div>
-    <div class="footer-right">
-      <span>&copy; 2026 Owned by <strong>ScramJr</strong></span>
-      <span style="color: rgba(96,165,250,0.25)">|</span>
-      <span><span class="status-dot">●</span> All systems online</span>
-    </div>
-  </div>
-</footer>
+        async function fetchFirstJson(urls) {
+            for (const url of urls) {
+                try {
+                    const res = await fetch(url);
+                    if (res.ok) return await res.json();
+                } catch (e) {}
+            }
+            return [];
+        }
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+        function renderGrid(containerId, data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = data.map(item => `
+                <div class="glass-card" onclick="openIframe('${item.src}')">
+                    <img src="${item.image}" alt="${item.name}" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                    <h4 style="text-align: center;">${item.name}</h4>
+                </div>
+            `).join('');
+        }
 
-<script>
-function switchView(viewId) {
-  document.querySelectorAll('.view-section').forEach(section => {
-    section.classList.remove('active');
-  });
-  document.getElementById(`view-${viewId}`).classList.add('active');
-  window.scrollTo(0, 0);
-}
+        async function init() {
+            const games = await fetchFirstJson(urls.games);
+            const apps = await fetchFirstJson(urls.apps);
 
-const urls = {
-  games: ['data/games.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/games.json'],
-  apps: ['data/apps.json', 'https://raw.githubusercontent.com/ten8mystery/Vertex-Gold/main/data/apps.json']
-};
+            document.getElementById('game-total').textContent = games.length;
+            renderGrid('gameList', games);
+            renderGrid('appList', apps);
 
-const priorityItems = ["[!] REQUEST GAME", "R0blox", "F0rtnite"];
+            // Scroller
+            const scroller = document.getElementById('game-scroller');
+            scroller.innerHTML = games.slice(0, 8).map(game => `
+                <div class="glass-card" style="min-width: 200px; cursor: pointer;" onclick="openIframe('${game.src}')">
+                    <img src="${game.image}" alt="${game.name}" style="width: 100%; border-radius: 6px;">
+                    <p style="font-size: 0.8rem; margin-top: 10px; text-align: center;">${game.name}</p>
+                </div>
+            `).join('');
+        }
 
-async function fetchFirstJson(urls) {
-  let lastErr = null;
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-      return await res.json();
-    } catch (e) {
-      lastErr = e;
-    }
-  }
-  throw lastErr ?? new Error('Failed to load JSON');
-}
+        function openIframe(src) {
+            const overlay = document.getElementById('iframeOverlay');
+            const iframe = document.getElementById('gameIframe');
+            iframe.src = src;
+            overlay.style.display = 'flex';
+        }
 
-function renderGridData(data, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  
-  data.sort((a, b) => {
-    const ai = priorityItems.indexOf(a.name);
-    const bi = priorityItems.indexOf(b.name);
-    if (ai !== -1 && bi !== -1) return ai - bi;
-    if (ai !== -1) return -1;
-    if (bi !== -1) return 1;
-    return a.name.localeCompare(b.name);
-  });
+        function closeIframe() {
+            const overlay = document.getElementById('iframeOverlay');
+            const iframe = document.getElementById('gameIframe');
+            iframe.src = 'about:blank';
+            overlay.style.display = 'none';
+        }
 
-  data.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'item-card';
-    card.dataset.name = item.name;
-    card.innerHTML = `
-      <div class="thumb"><img src="${item.image}" alt="${item.name}"></div>
-      <h3>${item.name}</h3>
-      <button class="play-btn">Play</button>
-    `;
+        function fullscreenIframe() {
+            const iframe = document.getElementById('gameIframe');
+            if (iframe.requestFullscreen) iframe.requestFullscreen();
+        }
 
-    card.querySelector('.play-btn').addEventListener('click', () => {
-      openIframe(item.src);
-    });
-    container.appendChild(card);
-  });
-}
+        function cloakTab() {
+            const win = window.open();
+            win.document.body.style.margin = "0";
+            win.document.body.style.height = "100vh";
+            const iframe = win.document.createElement("iframe");
+            iframe.style.width = "100%"; iframe.style.height = "100%"; iframe.style.border = "none";
+            iframe.src = window.location.href;
+            win.document.body.appendChild(iframe);
+        }
 
-async function initializeData() {
-  try {
-    const games = await fetchFirstJson(urls.games);
-    document.getElementById('game-total').textContent = games.length;
-    renderGridData(games, 'gameList');
-    
-    // Setup Trending Scroller
-    const featuredList = ["Among Us", "Minecraft 1.12", "Drive Mad", "R.E.P.O", "Survivor.io", "Slope", "Getting Over It with Bennett Foddy"];
-    const filteredGames = games.filter(g => g.name && featuredList.includes(g.name));
-    const scroller = document.getElementById('game-scroller');
-    scroller.innerHTML = '';
-    
-    if (filteredGames.length > 0) {
-      [...filteredGames, ...filteredGames].forEach(game => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.onclick = () => switchView('games');
-        card.innerHTML = `<img src="${game.image || ''}"><div class="game-info"><span><i class="fa-solid fa-fire" style="color: var(--apollo-2);"></i> ${game.name}</span></div>`;
-        scroller.appendChild(card);
-      });
-      startScrollRAF();
-    }
+        document.getElementById('search-games').oninput = (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('#gameList .glass-card').forEach(c => {
+                c.style.display = c.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+            });
+        };
 
-    // Load Apps
-    const apps = await fetchFirstJson(urls.apps);
-    renderGridData(apps, 'appList');
+        document.getElementById('search-apps').oninput = (e) => {
+            const q = e.target.value.toLowerCase();
+            document.querySelectorAll('#appList .glass-card').forEach(c => {
+                c.style.display = c.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+            });
+        };
 
-  } catch (e) {
-    console.error("Error loading data:", e);
-  }
-}
-
-initializeData();
-
-document.getElementById('search-games').addEventListener('input', (e) => filterList(e.target.value, 'gameList'));
-document.getElementById('search-apps').addEventListener('input', (e) => filterList(e.target.value, 'appList'));
-
-function filterList(query, containerId) {
-  const q = query.toLowerCase();
-  document.getElementById(containerId).querySelectorAll('.item-card').forEach(card => {
-    card.style.display = card.dataset.name.toLowerCase().includes(q) ? 'block' : 'none';
-  });
-}
-
-const overlay = document.getElementById('iframeOverlay');
-const overlayContainer = document.getElementById('overlayContainer');
-let currentIframe = null;
-
-function openIframe(src) {
-  overlay.style.display = 'flex';
-  overlayContainer.innerHTML = '';
-  
-  const iframe = document.createElement('iframe');
-  iframe.allow = 'autoplay; fullscreen; gamepad; accelerometer; gyroscope; pointer-lock; microphone';
-  overlayContainer.appendChild(iframe);
-  currentIframe = iframe;
-
-  fetch(src).then(r => r.text()).then(html => {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open(); doc.write(html); doc.close();
-  }).catch(() => {
-    const doc = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open(); doc.write(`<h2 style="color:white;padding:20px;">Failed to load source</h2>`); doc.close();
-  });
-}
-
-document.getElementById('closeBtn').onclick = () => {
-  overlay.style.display = 'none';
-  if (currentIframe) currentIframe.src = 'about:blank';
-  overlayContainer.innerHTML = '';
-  currentIframe = null;
-};
-
-document.getElementById('fullscreenBtn').onclick = () => {
-  if (currentIframe) {
-    if (currentIframe.requestFullscreen) currentIframe.requestFullscreen();
-    else if (currentIframe.webkitRequestFullscreen) currentIframe.webkitRequestFullscreen();
-    else if (overlayContainer.requestFullscreen) overlayContainer.requestFullscreen();
-  }
-};
-
-overlay.addEventListener('click', e => { if (e.target === overlay) document.getElementById('closeBtn').onclick(); });
-
-function openDmca() { alert("DMCA Notice: Contact scentedcheeseburger on Discord!"); }
-function cloakTab() {
-  var win = window.open();
-  win.document.body.style.margin = "0";
-  var iframe = win.document.createElement("iframe");
-  iframe.style.width = "100%"; iframe.style.height = "100%"; iframe.style.border = "none";
-  iframe.src = window.location.href;
-  win.document.body.appendChild(iframe);
-}
-
-document.getElementById("popup-close").onclick = () => document.getElementById("popup-overlay").style.display = "none";
-
-let animationId = null;
-function startScrollRAF() {
-  const scroller = document.getElementById('game-scroller');
-  if(!scroller || animationId) return;
-  
-  let playing = true; let ease = 1; let lastTimestamp = null; let scrollX = 0;
-  
-  scroller.addEventListener("mouseenter", () => playing = false);
-  scroller.addEventListener("mouseleave", () => playing = true);
-  window.addEventListener("resize", () => scrollX = 0);
-
-  function step(ts) {
-    if(lastTimestamp == null) lastTimestamp = ts;
-    const dt = ts - lastTimestamp; lastTimestamp = ts;
-    const easeTarget = playing ? 1 : 0;
-    const diff = easeTarget - ease;
-    if(Math.abs(diff) > 0.001) ease += diff * Math.min(1, dt/350); else ease = easeTarget;
-
-    if (scroller.children.length > 0) {
-      scrollX -= 80 * (dt/1000) * ease;
-      let totalWidth = 0;
-      for(let i=0; i<scroller.children.length/2; ++i) totalWidth += scroller.children[i].offsetWidth + 15;
-      if(totalWidth > 0) {
-        while(scrollX <= -totalWidth) scrollX += totalWidth;
-        scroller.style.transform = `translateX(${scrollX}px)`;
-      }
-    }
-    animationId = requestAnimationFrame(step);
-  }
-  animationId = requestAnimationFrame(step);
-}
-
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particlesArray = [];
-function resizeParticles() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-window.addEventListener('resize', resizeParticles);
-resizeParticles();
-
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = (Math.random() - 0.5) * 0.5;
-    this.speedY = (Math.random() - 0.5) * 0.5;
-  }
-  update() {
-    this.x += this.speedX; this.y += this.speedY;
-    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-  }
-  draw() {
-    ctx.fillStyle = 'rgba(96,165,250,0.22)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-  }
-}
-
-for (let i = 0; i < 80; i++) particlesArray.push(new Particle());
-
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particlesArray.forEach(p => { p.update(); p.draw(); });
-  
-  for (let a = 0; a < particlesArray.length; a++) {
-    for (let b = a + 1; b < particlesArray.length; b++) {
-      const dx = particlesArray[a].x - particlesArray[b].x;
-      const dy = particlesArray[a].y - particlesArray[b].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 120) {
-        ctx.strokeStyle = `rgba(167,139,250,${1 - dist / 120})`;
-        ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
-      }
-    }
-  }
-  requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-const firebaseConfig = { apiKey: "AIzaSyCAMwP6d2aZ7y1XK0YUujKmDg-50Tm_xQw", authDomain: "goldhub-c1a71.firebaseapp.com", databaseURL: "https://goldhub-c1a71-default-rtdb.firebaseio.com/", projectId: "goldhub-c1a71" };
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.database();
-
-auth.signInAnonymously();
-auth.onAuthStateChanged(user => {
-  if (!user) return;
-  const userRef = db.ref("connections/" + user.uid);
-  userRef.set(true);
-  userRef.onDisconnect().remove();
-  db.ref("connections").on("value", snap => { document.getElementById("players-count").textContent = snap.numChildren(); });
-});
-</script>
-
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
+
+</html>
+
 </html>

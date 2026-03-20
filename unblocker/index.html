@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apollo Unblocker</title>
-  <script src="../auth-check.js"></script>
+  <link rel="stylesheet" href="../index.css">
+  <script src="../performance.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/Destroyed12121/Staticsj@main/JS/scramjet.all.js" defer></script>
   <script type="module">
     import * as BareMux from "https://cdn.jsdelivr.net/npm/@mercuryworkshop/bare-mux/dist/index.mjs";
@@ -16,15 +17,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --bg: #050505;
+      --bg: #121e1e;
       --sidebar-bg: var(--bg);
-      --accent: #60a5fa;
-      --accent-glow: rgba(96, 165, 250, 0.2);
-      --text-primary: #f5f5f5;
-      --text-dim: #9b9b9b;
-      --border: rgba(96, 165, 250, 0.1);
-      --font: 'Inter', system-ui, -apple-system, sans-serif;
-      --card-bg: rgba(255, 255, 255, 0.03);
+      --accent: var(--accent-color);
+      --accent-glow: rgba(0, 242, 255, 0.2);
+      --text-primary: #ffffff;
+      --text-dim: #a0a0a0;
+      --border: var(--border-color);
+      --font: 'Poppins', sans-serif;
+      --card-bg: var(--glass-bg);
       --input-bg: rgba(255, 255, 255, 0.05);
       --bg-image: none;
       --bg-blur: 0px;
@@ -65,7 +66,7 @@
     }
 
 
-    /* ── BROWSER LAYOUT ── */
+
     .browser-container {
       width: 100%;
       height: 100%;
@@ -76,7 +77,7 @@
       min-width: 0;
     }
 
-    /* ── BROWSER TABS ROW ── */
+
     .browser-tabs {
       display: flex;
       align-items: flex-end;
@@ -222,7 +223,7 @@
       stroke: var(--accent);
     }
 
-    /* ── NAV BAR ── */
+
     .proxy-nav {
       display: flex;
       align-items: center;
@@ -265,7 +266,7 @@
       color: var(--accent);
     }
 
-    /* ── ADDRESS BAR ── */
+
     .address-wrapper {
       flex: 1;
       position: relative;
@@ -321,7 +322,7 @@
       color: var(--accent);
     }
 
-    /* ── LOADING BAR ── */
+
     .loading-bar-container {
       height: 2px;
       background: transparent;
@@ -335,7 +336,7 @@
       transition: width 0.2s ease, opacity 0.15s;
     }
 
-    /* ── IFRAME CONTAINER ── */
+
     .iframe-container {
       flex: 1;
       position: relative;
@@ -361,7 +362,7 @@
       transition: filter 0.4s ease;
     }
 
-    /* ── MESSAGE / LOADING OVERLAY ── */
+
     .message-container {
       display: flex;
       align-items: center;
@@ -797,9 +798,9 @@
       min-width: 0;
     }
 
-    /* --- END PROXY CSS --- */
 
-    /* --- STANDALONE LAYOUT OVERRIDES --- */
+
+
     body {
       display: flex;
       flex-direction: column;
@@ -818,18 +819,18 @@
       height: 100%;
     }
 
-    /* --- END STANDALONE LAYOUT OVERRIDES --- */
+
   </style>
 </head>
 
 <body>
 
-  <!-- PROXY SECTION (native — full index.html browser integrated) -->
+
   <section id="proxy-content" class="view-section">
     <div id="proxy-app"></div>
   </section>
 
-  <!-- PROXY WISP SETTINGS MODAL -->
+
   <div class="wisp-settings-modal hidden" id="wisp-settings-modal">
     <div class="proxy-wisp-card">
       <div class="proxy-wisp-header">
@@ -851,7 +852,7 @@
     </div>
   </div>
 
-  <!-- NT.HTML INLINED as a template (used to create Blob URL at runtime) -->
+
   <template id="nt-html-template">
     <!DOCTYPE html>
     <html lang="en">
@@ -1335,9 +1336,8 @@
       </div>
       <div class="content">
         <div class="hero-block">
-          <h1 class="gl-title" style="text-transform: none; letter-spacing: 2px; font-weight: 800; color: #fff;">Apollo
-          </h1>
-          <p style="color: var(--accent); font-size: 1.2rem; margin-top: -10px; opacity: 0.8;">by ghostlink</p>
+          <h1 class="gl-title" style="text-transform: none; letter-spacing: 2px; font-weight: 800; color: #fff;">APOLLO</h1>
+          <p style="color: var(--accent); font-size: 1.2rem; margin-top: -10px; opacity: 0.8;">Clean. Fast. Secure.</p>
         </div>
         <form class="search-wrap" id="searchForm">
           <div class="search-box">
@@ -1376,7 +1376,7 @@
         </div>
       </div>
       <script>
-        // Receive live theme updates from the parent page
+
         window.addEventListener('message', (e) => {
           if (e.data && e.data.type === 'GHOSTLINK_NT_THEME') {
             const t = e.data.theme;
@@ -1398,7 +1398,7 @@
             document.body.style.fontFamily = t.font || '';
           }
         });
-        // Tell the parent we are ready so it can push the current theme immediately
+
         if (window.parent && window.parent !== window) {
           window.parent.postMessage({ type: 'GHOSTLINK_NT_READY' }, '*');
         }
@@ -1681,17 +1681,14 @@
       const currentUrl = localStorage.getItem("proxServer") || DEFAULT_WISP;
 
       const currentCheck = await pingWispServer(currentUrl, 2000);
-
       if (currentCheck.success) {
-        console.log("Init: Current server is working:", currentUrl, currentCheck.latency + "ms");
         return;
       }
 
-      console.log("Init: Current server not responding, finding better server...");
+      console.log("Current server not responding, finding better server...");
       const best = await findBestWispServer(allServers, currentUrl);
 
       if (best && best !== currentUrl) {
-        console.log("Init: Auto-switching to faster server:", best);
         localStorage.setItem("proxServer", best);
         const serverName = allServers.find(s => s.url === best)?.name || 'Faster Server';
         proxyNotify('info', 'Auto-switched', `Using ${serverName} for best performance`);
@@ -1838,6 +1835,7 @@
                         </div>
                         <button id="devtools-btn" title="DevTools"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
                         <button id="wisp-settings-btn" title="Proxy Settings"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+                        <button id="discord-btn-nav" title="Discord" style="color:#5865F2;"><i class="fa-brands fa-discord"></i></button>
                     </div>
                     <div class="loading-bar-container"><div class="loading-bar" id="loading-bar"></div></div>
                     <div class="iframe-container" id="iframe-container">
@@ -1917,6 +1915,7 @@
       };
       document.getElementById('devtools-btn').onclick = toggleDevTools;
       document.getElementById('wisp-settings-btn').onclick = openSettings;
+      document.getElementById('discord-btn-nav').onclick = () => window.open('https://discord.gg/3V2m5zzQDN', '_blank');
 
       elements.skipBtn.onclick = () => {
         const tab = getActiveTab();
@@ -2172,10 +2171,8 @@
           _dragSrcTabId = null;
           updateTabsUI();
         });
-
         container.appendChild(el);
       });
-
 
       const newBtn = document.createElement("button");
       newBtn.className = "new-tab";
@@ -2629,7 +2626,6 @@
         }
       }
     }
-    // ---END PROXY BROWSER LOGIC---
 
     proxyInit();
   </script>

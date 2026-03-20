@@ -1,602 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<script src="auth-check.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Apollo – Settings</title>
-<link rel="icon" type="image/png" href="images/favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2947724200022756" crossorigin="anonymous"></script>
-
-<style>
-:root {
-  --bg: #050505;
-  --panel: #0d0d0d;
-  --panel-soft: #131313;
-  --apollo-1: #60a5fa;
-  --apollo-2: #a78bfa;
-  --apollo-3: #7c3aed;
-  --text: #f5f5f5;
-  --muted: #9b9b9b;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, sans-serif; }
-
-body {
-  min-height: 100vh;
-  background:
-    radial-gradient(900px 500px at 20% -10%, rgba(96,165,250,.16), transparent 60%),
-    radial-gradient(900px 500px at 80% 0%, rgba(167,139,250,.14), transparent 60%),
-    var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-  position: relative;
-}
-
-#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-
-header {
-  position: sticky; top: 0; z-index: 50;
-  backdrop-filter: blur(14px);
-  background: rgba(5,5,5,.7);
-  border-bottom: 1px solid rgba(96,165,250,.16);
-}
-
-.nav {
-  max-width: 1300px; margin: auto; padding: 18px 28px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-
-.logo {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.logo img {
-  height: 100%;
-  width: auto;
-  object-fit: contain;
-  transition: transform 0.2s;
-}
-
-.logo:hover img {
-  transform: scale(1.05);
-}
-
-.nav a button {
-  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-  border: none; padding: 12px 22px; border-radius: 14px;
-  font-weight: 800; cursor: pointer; color: #fff;
-  box-shadow: 0 0 35px rgba(96,165,250,.35);
-  transition: transform .25s, box-shadow .25s;
-}
-.nav a button:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 65px rgba(167,139,250,.55); }
-
-.page {
-  max-width: 900px; margin: 60px auto 80px; padding: 0 28px;
-  position: relative; z-index: 1; animation: fadeUp 0.5s cubic-bezier(0.16,1,.3,1) both;
-}
-
-@keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-
-.page-header { margin-bottom: 40px; }
-.page-header h1 {
-  font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900;
-  background: linear-gradient(120deg, #fff, var(--apollo-1));
-  background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-}
-.page-header p { color: var(--muted); font-size: 0.95rem; }
-
-.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-@media(max-width: 700px) { .settings-grid { grid-template-columns: 1fr; } }
-
-.settings-card {
-  background: linear-gradient(180deg, #0b1220, #09090b);
-  border: 1px solid rgba(96,165,250,.18); border-radius: 22px;
-  padding: 28px; position: relative; overflow: hidden;
-  transition: border-color 0.3s;
-}
-.settings-card:hover { border-color: rgba(96,165,250,.35); }
-
-.settings-card::after {
-  content: ""; position: absolute; inset: -60%;
-  background: conic-gradient(from 0deg, transparent, rgba(167,139,250,.04), transparent);
-  animation: spin 25s linear infinite; pointer-events: none;
-}
-
-.card-title {
-  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1.5px; color: var(--apollo-1); margin-bottom: 20px;
-  display: flex; align-items: center; gap: 8px; position: relative; z-index: 1;
-}
-
-.color-row {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 16px; position: relative; z-index: 1;
-}
-.color-row:last-of-type { margin-bottom: 0; }
-
-.color-label { font-size: 0.88rem; color: var(--text); font-weight: 500; }
-.color-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-
-.color-picker-wrap {
-  display: flex; align-items: center; gap: 10px;
-}
-
-.color-picker-wrap input[type="color"] {
-  width: 44px; height: 44px; border: 2px solid rgba(96,165,250,.25);
-  border-radius: 12px; cursor: pointer; background: none; padding: 2px;
-  transition: border-color 0.2s, transform 0.2s;
-}
-.color-picker-wrap input[type="color"]:hover {
-  border-color: var(--apollo-1); transform: scale(1.08);
-}
-
-.hex-input {
-  width: 88px; padding: 8px 10px;
-  background: rgba(255,255,255,.04); border: 1px solid rgba(96,165,250,.2);
-  border-radius: 10px; color: var(--text); font-size: 0.8rem;
-  font-family: monospace; outline: none; text-transform: uppercase;
-  transition: border-color 0.2s;
-}
-.hex-input:focus { border-color: var(--apollo-1); }
-
-.preset-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-  position: relative; z-index: 1;
-}
-
-.preset-btn {
-  border: 2px solid transparent; border-radius: 14px; padding: 10px 8px;
-  cursor: pointer; text-align: center; transition: transform 0.2s, border-color 0.2s;
-  font-size: 0.78rem; font-weight: 700; color: #fff; position: relative; overflow: hidden;
-}
-.preset-btn:hover { transform: scale(1.05); border-color: rgba(255,255,255,.4); }
-.preset-btn.active-preset { border-color: #fff !important; box-shadow: 0 0 18px rgba(255,255,255,.25); }
-
-.preview-section {
-  margin-top: 24px; position: relative; z-index: 1;
-}
-
-.preview-label {
-  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1.5px; color: var(--muted); margin-bottom: 14px;
-}
-
-.preview-bar {
-  border-radius: 16px; padding: 18px 22px;
-  border: 1px solid rgba(96,165,250,.18);
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 12px;
-  transition: all 0.3s;
-}
-
-.preview-logo {
-  font-weight: 900; font-size: 1.2rem; letter-spacing: 1px;
-  background: linear-gradient(120deg, #fff, var(--apollo-1), var(--apollo-2));
-  background-size: 200% auto; background-clip: text;
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  animation: shine 6s linear infinite;
-}
-
-.preview-btns { display: flex; gap: 8px; }
-
-.preview-btn {
-  padding: 8px 18px; border: none; border-radius: 10px;
-  font-weight: 800; font-size: 0.8rem; cursor: default;
-  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-  color: #fff; box-shadow: 0 0 18px rgba(96,165,250,.25);
-}
-
-.preview-accent {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--apollo-2); display: inline-block; margin-right: 6px; vertical-align: middle;
-  box-shadow: 0 0 8px var(--apollo-2);
-}
-
-.action-row {
-  display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap;
-  position: relative; z-index: 1;
-}
-
-.btn-save {
-  flex: 1; min-width: 140px; padding: 15px;
-  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-  border: none; border-radius: 16px; color: #fff;
-  font-weight: 900; font-size: 0.97rem; cursor: pointer;
-  box-shadow: 0 0 40px rgba(96,165,250,.3);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.btn-save:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 0 60px rgba(167,139,250,.45); }
-
-.btn-reset {
-  flex: 1; min-width: 140px; padding: 15px;
-  background: rgba(255,255,255,.05); border: 1px solid rgba(96,165,250,.2);
-  border-radius: 16px; color: var(--muted); font-weight: 700;
-  font-size: 0.97rem; cursor: pointer; transition: background 0.2s, color 0.2s;
-}
-.btn-reset:hover { background: rgba(255,255,255,.08); color: var(--text); }
-
-.toast {
-  position: fixed; bottom: 32px; right: 32px;
-  background: linear-gradient(135deg, #0b1220, #09090b);
-  border: 1px solid rgba(96,165,250,.3); border-radius: 14px;
-  padding: 14px 22px; color: var(--text); font-weight: 600;
-  box-shadow: 0 0 40px rgba(96,165,250,.2), 0 20px 60px rgba(0,0,0,.8);
-  z-index: 9999; display: flex; align-items: center; gap: 10px;
-  transform: translateY(100px); opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.16,1,.3,1), opacity 0.4s;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast i { color: #4ade80; }
-
-.wide-card { grid-column: 1 / -1; }
-
-.account-row {
-  display: flex; align-items: center; gap: 16px;
-  margin-bottom: 16px; position: relative; z-index: 1;
-}
-.account-row:last-child { margin-bottom: 0; }
-.acc-avatar {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 1.3rem; flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(96,165,250,.3);
-}
-.acc-info .acc-name { font-weight: 700; font-size: 1rem; }
-.acc-info .acc-sub { color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
-
-.btn-small {
-  padding: 8px 18px; border: none; border-radius: 10px;
-  font-weight: 700; font-size: 0.82rem; cursor: pointer;
-  background: linear-gradient(135deg, var(--apollo-1), var(--apollo-3));
-  color: #fff; transition: transform 0.2s; margin-left: auto;
-}
-.btn-small:hover { transform: scale(1.05); }
-
-.btn-small-ghost {
-  padding: 8px 18px; border: 1px solid rgba(248,113,113,.3); border-radius: 10px;
-  font-weight: 700; font-size: 0.82rem; cursor: pointer;
-  background: rgba(248,113,113,.08); color: #f87171;
-  transition: transform 0.2s, background 0.2s; margin-left: auto;
-}
-.btn-small-ghost:hover { background: rgba(248,113,113,.16); transform: scale(1.05); }
-
-@keyframes shine { to { background-position: 200% center; } }
-@keyframes spin { to { transform: rotate(360deg); } }
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apollo – Settings</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
 </head>
-<body>
 
-<canvas id="particles"></canvas>
-
-<header>
-  <div class="nav">
-    <div class="logo" onclick="window.location.href='index.html'"><img src="images/logo.png" alt="Apollo"></div>
-    <div style="display:flex; gap:14px;">
-      <a href="index.html"><button><i class="fa-solid fa-house" style="margin-right:5px;"></i>Home</button></a>
-      <a href="play.html"><button><i class="fa-solid fa-gamepad" style="margin-right:5px;"></i>Games</button></a>
-      <a href="apps.html"><button><i class="fa-solid fa-rocket" style="margin-right:5px;"></i>Apps</button></a>
-      <a href="unblocker/index.html"><button><i class="fa-solid fa-unlock" style="margin-right:5px;"></i>Unblocker</button></a>
-      <a href="login.html"><button id="loginNavBtn"><i class="fa-solid fa-user" style="margin-right:5px;"></i>Login</button></a>
-    </div>
-  </div>
-</header>
-
-<div class="page">
-  <div class="page-header">
-    <h1><i class="fa-solid fa-gear" style="margin-right:14px; opacity:0.8;"></i>Settings</h1>
-    <p>Customize Apollo to your style. Changes apply across all pages.</p>
-  </div>
-
-  <div class="preview-section" style="margin-bottom:28px; position:relative; z-index:1;">
-    <div class="preview-label">Live Preview</div>
-    <div class="preview-bar" id="previewBar">
-      <div class="preview-logo">APOLLO</div>
-      <div class="preview-btns">
-        <div class="preview-btn">Play Now</div>
-        <div style="font-size:0.82rem; color:var(--muted); align-self:center; padding-left:4px;">
-          <span class="preview-accent" id="previewAccent"></span>
-          <span style="color:var(--muted);">Accent</span>
+<body class="custom-cursor">
+    <nav class="glass">
+        <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px;">
+            APOLLO
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="play.html"><i class="fa-solid fa-gamepad"></i> Games</a>
+            <a href="apps.html"><i class="fa-solid fa-rocket"></i> Apps</a>
+            <a href="unblocker/index.html"><i class="fa-solid fa-unlock"></i> Unblocker</a>
+            <a href="settings.html"><i class="fa-solid fa-gear"></i> Settings</a>
+        </div>
+    </nav>
 
-  <div class="settings-grid">
-    <div class="settings-card wide-card">
-      <div class="card-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Preset Themes</div>
-      <div class="preset-grid" id="presetGrid">
-      </div>
-    </div>
+    <main class="container">
+        <header style="text-align: center; margin-bottom: 50px;">
+            <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 15px;">Site <span style="color: var(--accent-color);">Settings</span></h1>
+            <p style="color: var(--text-secondary);">Manage your experience and optimize performance.</p>
+        </header>
 
-    <div class="settings-card">
-      <div class="card-title"><i class="fa-solid fa-palette"></i> Accent Colors</div>
+        <div class="grid">
+            <div class="glass-card" style="padding: 30px;">
+                <h3 style="color: var(--accent-color); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-palette"></i> Appearance
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">Theme</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Current visual style</div>
+                        </div>
+                        <select id="themeSelect" class="glass" style="padding: 8px; border-radius: 6px; color: var(--text-primary); outline: none;">
+                            <option value="teal">Truffled Teal</option>
+                            <option value="dark">Dark Abyss</option>
+                            <option value="amoled">Pure Black</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-      <div class="color-row">
-        <div>
-          <div class="color-label">Primary</div>
-          <div class="color-sub">Buttons, highlights</div>
-        </div>
-        <div class="color-picker-wrap">
-          <input type="color" id="colorApollo1" value="#60a5fa" oninput="onColorChange('apollo1', this.value)">
-          <input type="text" class="hex-input" id="hexApollo1" value="#60A5FA" maxlength="7" oninput="onHexChange('apollo1', this.value)">
-        </div>
-      </div>
 
-      <div class="color-row">
-        <div>
-          <div class="color-label">Secondary</div>
-          <div class="color-sub">Accents, particles</div>
-        </div>
-        <div class="color-picker-wrap">
-          <input type="color" id="colorApollo2" value="#a78bfa" oninput="onColorChange('apollo2', this.value)">
-          <input type="text" class="hex-input" id="hexApollo2" value="#A78BFA" maxlength="7" oninput="onHexChange('apollo2', this.value)">
-        </div>
-      </div>
+            <div class="glass-card" style="padding: 30px;">
+                <h3 style="color: var(--accent-color); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-bolt"></i> Performance
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">Chromebook Mode</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Disables blurs and animations</div>
+                        </div>
+                        <button id="perfToggle" class="btn btn-outline" style="padding: 8px 15px;">Enable</button>
+                    </div>
+                </div>
+            </div>
 
-      <div class="color-row">
-        <div>
-          <div class="color-label">Deep</div>
-          <div class="color-sub">Gradients, glows</div>
-        </div>
-        <div class="color-picker-wrap">
-          <input type="color" id="colorApollo3" value="#7c3aed" oninput="onColorChange('apollo3', this.value)">
-          <input type="text" class="hex-input" id="hexApollo3" value="#7C3AED" maxlength="7" oninput="onHexChange('apollo3', this.value)">
-        </div>
-      </div>
-    </div>
 
-    <div class="settings-card">
-      <div class="card-title"><i class="fa-solid fa-moon"></i> Background & Text</div>
+            <div class="glass-card" style="padding: 30px;">
+                <h3 style="color: var(--accent-color); margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-mask"></i> Tab Cloaking
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 600;">Panic Key</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Quick redirect (ESC)</div>
+                        </div>
+                        <input type="text" id="panicUrl" class="glass" placeholder="https://google.com" style="padding: 8px; border-radius: 6px; color: var(--text-primary); outline: none; width: 150px;">
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      <div class="color-row">
-        <div>
-          <div class="color-label">Background</div>
-          <div class="color-sub">Page background</div>
+        <div style="margin-top: 40px; text-align: center;">
+            <button class="btn btn-primary" onclick="saveSettings()" style="padding: 15px 40px;">Save All Changes</button>
         </div>
-        <div class="color-picker-wrap">
-          <input type="color" id="colorBg" value="#050505" oninput="onColorChange('bg', this.value)">
-          <input type="text" class="hex-input" id="hexBg" value="#050505" maxlength="7" oninput="onHexChange('bg', this.value)">
-        </div>
-      </div>
+    </main>
 
-      <div class="color-row">
-        <div>
-          <div class="color-label">Text Color</div>
-          <div class="color-sub">Main content text</div>
-        </div>
-        <div class="color-picker-wrap">
-          <input type="color" id="colorText" value="#f5f5f5" oninput="onColorChange('text', this.value)">
-          <input type="text" class="hex-input" id="hexText" value="#F5F5F5" maxlength="7" oninput="onHexChange('text', this.value)">
-        </div>
-      </div>
+    <div id="toast" class="glass" style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 15px 30px; border-color: var(--accent-color); transition: transform 0.3s; z-index: 10000; display: flex; align-items: center; gap: 10px; opacity: 0;">
+        <i class="fa-solid fa-circle-check" style="color: #00ff88;"></i>
+        <span>Settings saved successfully!</span>
     </div>
 
-    <div class="settings-card wide-card">
-      <div class="card-title"><i class="fa-solid fa-user-shield"></i> Account</div>
-      <div id="accountContent">
-      </div>
-    </div>
-  </div>
-
-  <div class="action-row">
-    <button class="btn-save" onclick="saveTheme()">
-      <i class="fa-solid fa-floppy-disk" style="margin-right:8px;"></i>Save Changes
-    </button>
-    <button class="btn-reset" onclick="resetTheme()">
-      <i class="fa-solid fa-rotate-left" style="margin-right:8px;"></i>Reset to Default
-    </button>
-  </div>
-</div>
-
-<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg">Saved!</span></div>
-
-<script>
-const defaults = {
-  apollo1: '#60a5fa',
-  apollo2: '#a78bfa',
-  apollo3: '#7c3aed',
-  bg: '#050505',
-  text: '#f5f5f5'
-};
-
-const VAR_MAP = {
-  apollo1: '--apollo-1',
-  apollo2: '--apollo-2',
-  apollo3: '--apollo-3',
-  bg: '--bg',
-  text: '--text'
-};
-
-let current = Object.assign({}, defaults);
-
-async function loadTheme() {
-  const accountTheme = await window.loadUserTheme();
-  const localTheme = JSON.parse(localStorage.getItem('apollo_theme') || '{}');
-  current = Object.assign({}, defaults, localTheme, accountTheme);
-  applyAll();
-  syncInputs();
-}
-
-function applyAll() {
-  const r = document.documentElement.style;
-  Object.entries(VAR_MAP).forEach(([key, varName]) => r.setProperty(varName, current[key]));
-}
-
-function syncInputs() {
-  Object.entries(current).forEach(([key, val]) => {
-    const picker = document.getElementById('color' + cap(key));
-    const hex    = document.getElementById('hex' + cap(key));
-    if (picker) picker.value = val;
-    if (hex)    hex.value = val.toUpperCase();
-  });
-}
-
-function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-function onColorChange(key, value) {
-  current[key] = value;
-  document.documentElement.style.setProperty(VAR_MAP[key], value);
-  const hex = document.getElementById('hex' + cap(key));
-  if (hex) hex.value = value.toUpperCase();
-  markNoPreset();
-}
-
-function onHexChange(key, value) {
-  if (!/^#[0-9A-Fa-f]{6}$/.test(value)) return;
-  current[key] = value;
-  document.documentElement.style.setProperty(VAR_MAP[key], value);
-  const picker = document.getElementById('color' + cap(key));
-  if (picker) picker.value = value;
-  markNoPreset();
-}
-const PRESETS = [
-  { name: 'Apollo Blue', colors: { apollo1:'#60a5fa', apollo2:'#a78bfa', apollo3:'#7c3aed', bg:'#050505', text:'#f5f5f5' } },
-  { name: 'Emerald', colors: { apollo1:'#34d399', apollo2:'#6ee7b7', apollo3:'#059669', bg:'#020c07', text:'#f0fdf4' } },
-  { name: 'Sunset', colors: { apollo1:'#fb923c', apollo2:'#f472b6', apollo3:'#be185d', bg:'#0a0504', text:'#fff7f0' } },
-  { name: 'Rose Gold', colors: { apollo1:'#f9a8d4', apollo2:'#fbbf24', apollo3:'#c2410c', bg:'#07030a', text:'#fdf2f8' } },
-  { name: 'Neon', colors: { apollo1:'#22d3ee', apollo2:'#a3e635', apollo3:'#0e7490', bg:'#010c0d', text:'#f0fdff' } },
-  { name: 'Mono', colors: { apollo1:'#d1d5db', apollo2:'#9ca3af', apollo3:'#374151', bg:'#030303', text:'#f9fafb' } },
-];
-
-function renderPresets() {
-  const grid = document.getElementById('presetGrid');
-  grid.innerHTML = '';
-  PRESETS.forEach((preset, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'preset-btn';
-    btn.id = 'preset_' + i;
-    btn.style.background = `linear-gradient(135deg, ${preset.colors.apollo1}, ${preset.colors.apollo3})`;
-    btn.innerHTML = `<i class="fa-solid fa-circle-check" style="margin-right:5px; opacity:0; transition:opacity 0.2s;" id="pcheck_${i}"></i>${preset.name}`;
-    btn.onclick = () => applyPreset(i);
-    grid.appendChild(btn);
-  });
-}
-
-function applyPreset(idx) {
-  const preset = PRESETS[idx];
-  current = Object.assign({}, preset.colors);
-  applyAll();
-  syncInputs();
-  document.querySelectorAll('.preset-btn').forEach((b, i) => {
-    b.classList.toggle('active-preset', i === idx);
-    document.getElementById('pcheck_' + i).style.opacity = i === idx ? '1' : '0';
-  });
-}
-
-function markNoPreset() {
-  document.querySelectorAll('.preset-btn').forEach((b, i) => {
-    b.classList.remove('active-preset');
-    document.getElementById('pcheck_' + i).style.opacity = '0';
-  });
-}
-async function saveTheme() {
-  localStorage.setItem('apollo_theme', JSON.stringify(current));
-  await window.saveUserTheme(current);
-  showToast('Theme saved! Changes applied across Apollo. ✨');
-}
-
-function resetTheme() {
-  current = Object.assign({}, defaults);
-  applyAll();
-  syncInputs();
-  markNoPreset();
-  showToast('Theme reset to default.');
-}
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3200);
-}
-function renderAccount() {
-  const session = JSON.parse(localStorage.getItem('apollo_session') || 'null');
-  const container = document.getElementById('accountContent');
-  const btn = document.getElementById('loginNavBtn');
-
-  if (session) {
-    if (btn) btn.textContent = session.username;
-    container.innerHTML = `
-      <div class="account-row">
-        <div class="acc-avatar">${session.username.charAt(0).toUpperCase()}</div>
-        <div class="acc-info">
-          <div class="acc-name">${session.username}</div>
-          <div class="acc-sub">Signed in · Apollo Member</div>
+    <footer class="glass" style="margin-top: 100px; padding: 40px 0; border-radius: 0;">
+        <div class="container" style="margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <h2 style="font-weight: 900; letter-spacing: 2px;">APOLLO</h2>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="play.html">Games</a>
+                    <a href="apps.html">Apps</a>
+                    <a href="https://discord.gg/3V2m5zzQDN" target="_blank">Discord</a>
+                </div>
+            </div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                &copy; 2026 Owned by <strong>Apollo Team</strong> | <span style="color: #00ff88;">●</span> All games online
+            </div>
         </div>
-        <button class="btn-small" onclick="window.location.href='login.html'">Profile</button>
-      </div>
-      <div class="account-row" style="margin-top:6px;">
-        <div style="color:var(--muted); font-size:0.85rem; flex:1;">Signed in to your Apollo account.</div>
-        <button class="btn-small-ghost" onclick="signOut()"><i class="fa-solid fa-right-from-bracket" style="margin-right:5px;"></i>Sign Out</button>
-      </div>
-    `;
-  } else {
-    container.innerHTML = `
-      <div class="account-row">
-        <div class="acc-avatar" style="background:rgba(255,255,255,.07); color:var(--muted);">?</div>
-        <div class="acc-info">
-          <div class="acc-name">Not signed in</div>
-          <div class="acc-sub">Sign in to save your preferences to your account</div>
-        </div>
-        <button class="btn-small" onclick="window.location.href='login.html'"><i class="fa-solid fa-right-to-bracket" style="margin-right:5px;"></i>Sign In</button>
-      </div>
-    `;
-  }
-}
+    </footer>
 
-function signOut() {
-  localStorage.removeItem('apollo_session');
-  window.location.href = 'login.html';
-}
-window.addEventListener('DOMContentLoaded', () => {
-  renderPresets();
-  loadTheme();
-  renderAccount();
-});
-const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
-let particlesArray = [];
-canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-class Particle {
-  constructor() {
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * canvas.height;
-    this.size = Math.random() * 2 + 1;
-    this.speedX = (Math.random() - 0.5) * 0.5;
-    this.speedY = (Math.random() - 0.5) * 0.5;
-  }
-  update() {
-    this.x += this.speedX; this.y += this.speedY;
-    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-  }
-  draw() {
-    ctx.fillStyle = 'rgba(96,165,250,0.22)';
-    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
-  }
-}
-function initParticles() { for (let i = 0; i < 70; i++) particlesArray.push(new Particle()); }
-function animate() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particlesArray.forEach(p => { p.update(); p.draw(); });
-  for (let a=0;a<particlesArray.length;a++) for (let b=a+1;b<particlesArray.length;b++) {
-    const dx=particlesArray[a].x-particlesArray[b].x, dy=particlesArray[a].y-particlesArray[b].y;
-    const d=Math.sqrt(dx*dx+dy*dy);
-    if(d<120){ ctx.strokeStyle=`rgba(167,139,250,${1-d/120})`; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(particlesArray[a].x,particlesArray[a].y); ctx.lineTo(particlesArray[b].x,particlesArray[b].y); ctx.stroke(); }
-  }
-  requestAnimationFrame(animate);
-}
-initParticles(); animate();
-</script>
+    <script src="performance.js"></script>
+    <script>
+        const perfToggle = document.getElementById('perfToggle');
+        const panicInput = document.getElementById('panicUrl');
+        const themeSelect = document.getElementById('themeSelect');
+        const toast = document.getElementById('toast');
+
+        function loadSettings() {
+            // Performance
+            const perf = localStorage.getItem('apollo_perf_mode') === 'low';
+            updatePerfUI(perf);
+
+            // Panic URL
+            panicInput.value = localStorage.getItem('apollo_panic_url') || 'https://google.com';
+
+            // Theme
+            themeSelect.value = localStorage.getItem('apollo_theme_name') || 'teal';
+        }
+
+        function updatePerfUI(isLow) {
+            perfToggle.textContent = isLow ? 'Disable' : 'Enable';
+            perfToggle.style.borderColor = isLow ? 'var(--accent-color)' : 'var(--border-color)';
+        }
+
+        perfToggle.onclick = () => {
+            const current = perfToggle.textContent === 'Disable';
+            const next = !current;
+            if (window.PerformanceManager) {
+                window.PerformanceManager.togglePerformanceMode(next);
+            }
+            updatePerfUI(next);
+        };
+
+        function saveSettings() {
+            localStorage.setItem('apollo_panic_url', panicInput.value);
+            localStorage.setItem('apollo_theme_name', themeSelect.value);
+
+            // Show Toast
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(100px)';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const url = localStorage.getItem('apollo_panic_url') || 'https://google.com';
+                window.location.href = url;
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
 </body>
+
 </html>
